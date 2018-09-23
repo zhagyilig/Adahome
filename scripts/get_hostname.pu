@@ -1,0 +1,7 @@
+import socket
+import fcntl,struct
+import time
+
+
+hostname = socket.gethostname()
+print('主机名*************************',hostname)

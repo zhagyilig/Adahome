@@ -1,0 +1,104 @@
+<!--创建图形-->
+
+{% extends "public/layout.html" %}
+
+{% block breadcrumb %}
+    <li><i class="fa fa-fw fa-home"></i>监控配置<span class="divider"></span></li>
+    <li><a href="{% url 'influx_graph_create' %}">图形管理</a><span class="divider"></span></li>
+{% endblock %}
+
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-horizontal form-border" method="post" enctype="multipart/form-data"
+                          action="{% url 'influx_graph_create' %}">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">图形标题<span style="color: red;"> *</span></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control list-group-item" name="title">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">子标题<span> *</span></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control list-group-item" name="subtitle">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">数据点单位<span style="color: red;"> *</span></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control list-group-item" name="unit">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">measurement<span style="color: red;"> *</span></label>
+                            <div class="col-sm-6" id="contenttype">
+                                <select class="chosen-select chosen-transparent form-control" name="measurement"
+                                        id="select_contenttype" parsley-trigger="change" parsley-required="true"
+                                        parsley-error-container="#contenttype">
+                                    <option value="0">请选择influx中的表</option>
+                                    {% for mea in measurements %}
+                                        <option value="{{ mea }}">{{ mea }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="select_status" class="col-sm-3 control-label">是否动态主机名<span
+                                    style="color: red;"> *</span></label>
+
+                            <div class="col-sm-6" id="idc">
+                                <label class="radio-inline">
+                                    <input type="radio" name="auto_hostname" checked value="1"/>使用
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="auto_hostname" checked value="0"/>不使用
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">字段过滤<span style="color: red;"> *</span></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control list-group-item" name="field_expression"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">格式化tootip_formatter
+                                <span style="color: red;"> *</span></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control list-group-item" name="tootip_formatter"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">格式化Y轴
+                                <span style="color: red;"> *</span></label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control list-group-item" name="yaxis_formatter"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-footer">
+                            <div class="col-sm-offset-5 col-sm-3">
+                                <button type="submit" class="btn btn-primary" id="submit-action">创建</button>
+                                <button type="reset" class="btn btn-default ">重置</button>
+                                <button class="btn btn-info ">检测</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

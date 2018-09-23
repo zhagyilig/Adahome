@@ -12,7 +12,6 @@ from django.utils.http import urlquote_plus  # url编码
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import serializers  # 数据转成json
 from django.shortcuts import get_object_or_404  # 如果不能获取表中的数据，则抛出404
-from django.urls import reverse
 from django.utils.http import urlquote_plus  # 加密url
 from resources.models import Server, Product  # 自定义的models
 from core.saltapi import SaltApi  # 刷新服务信息需要salt api

@@ -24,36 +24,36 @@
                 </ul>
             </li> <!--资产平台结束-->
 
-{#            <li><!--代码管理-->#}
-{#                <a href="#"><i class="fa fa-desktop fa-fw"></i>监控配置<span class="fa arrow"></span></a>#}
-{#                <ul class="nav nav-second-level collapse">#}
-{#                    <li>#}
-{#                        <a href="#">同步主机到zabbix</a>#}
-{#                    </li>#}
-{#                    <li>#}
-{#                        <a href="#">模板绑定</a>#}
-{#                    </li>#}
-{#                </ul>#}
-{#            </li> <!--代码管理结束-->#}
+            <li><!--监控配置-->
+                <a href="#"><i class="fa fa-desktop fa-fw"></i>监控配置<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="{% url 'influx_graph' %}">监控展示</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'influx_graph_list' %}">图形管理</a>
+                    </li>
+                </ul>
+            </li> <!--监控配置-->
 
 
-{#            <li><!--任务管理开始-->#}
-{#                <a href="#"><i class="fa fa-list-ul fa-fw"></i>任务编排<span class="fa arrow"></span></a>#}
-{#                <ul class="nav nav-second-level collapse">#}
-{#                    <li><a href="#">任务列表</a></li>#}
-{#                    <li><a href="#">Interval</a></li>#}
-{#                    <li><a href="#">Crontab</a></li>#}
-{#                    <li><a href="#">任务结果</a></li>#}
-{#                    <li><a href="#">后台管理</a></li>#}
-{#                </ul>#}
-{#            </li> <!--任务管理结束-->#}
+            {#            <li><!--任务管理开始-->#}
+            {#                <a href="#"><i class="fa fa-list-ul fa-fw"></i>任务编排<span class="fa arrow"></span></a>#}
+            {#                <ul class="nav nav-second-level collapse">#}
+            {#                    <li><a href="#">任务列表</a></li>#}
+            {#                    <li><a href="#">Interval</a></li>#}
+            {#                    <li><a href="#">Crontab</a></li>#}
+            {#                    <li><a href="#">任务结果</a></li>#}
+            {#                    <li><a href="#">后台管理</a></li>#}
+            {#                </ul>#}
+            {#            </li> <!--任务管理结束-->#}
 
-{#            <li><!--应用管理开始-->#}
-{#                <a href="#"><i class="fa fa-outdent fa-fw"></i>应用管理<span class="fa arrow"></span></a>#}
-{#                <ul class="nav nav-second-level collapse">#}
-{#                    <li><a href="#">项目</a></li>#}
-{#                </ul>#}
-{#            </li> <!--应用管理结束-->#}
+            {#            <li><!--应用管理开始-->#}
+            {#                <a href="#"><i class="fa fa-outdent fa-fw"></i>应用管理<span class="fa arrow"></span></a>#}
+            {#                <ul class="nav nav-second-level collapse">#}
+            {#                    <li><a href="#">项目</a></li>#}
+            {#                </ul>#}
+            {#            </li> <!--应用管理结束-->#}
 
             <li><!--任务管理-->
                 <a href="#"><i class="fa fa-retweet fa-fw"></i>持续交付<span class="fa arrow"></span></a>
@@ -64,20 +64,20 @@
                 </ul>
             </li> <!--任务管理结束-->
 
-{#            <li><!--日志开始-->#}
-{#                <a href="#"><i class="fa fa-file fa-fw"></i>日志审计<span class="fa arrow"></span></a>#}
-{#                <ul class="nav nav-second-level collapse">#}
-{#                    <li><a href="#">日志</a></li>#}
-{#                </ul>#}
-{#            </li> <!--日志结束-->#}
+            {#            <li><!--日志开始-->#}
+            {#                <a href="#"><i class="fa fa-file fa-fw"></i>日志审计<span class="fa arrow"></span></a>#}
+            {#                <ul class="nav nav-second-level collapse">#}
+            {#                    <li><a href="#">日志</a></li>#}
+            {#                </ul>#}
+            {#            </li> <!--日志结束-->#}
 
             <li><!--consul管理-->
                 <a href="#"><i class="fa fa-link fa-fw"></i>Consul<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="#">成员</a></li>
                     <li><a href="#">更新</a></li>
-{#                    <li><a href="#">备份/恢复</a></li>#}
-{#                    <li><a href="#">相关文档</a></li>#}
+                    {#                    <li><a href="#">备份/恢复</a></li>#}
+                    {#                    <li><a href="#">相关文档</a></li>#}
                 </ul>
             </li> <!--consul管理结束-->
 
