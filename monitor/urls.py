@@ -13,6 +13,9 @@ urlpatterns = [
     url(r'^influx/', include([
         url('^get/$', influxdb.InfluxdbApiView.as_view(), name='influx_api'),
         url('^echart/$', influxdb.InfluxdbGraphTemView.as_view(), name='influx_graph'),
-
-    ]))
+        url('^grahp/', include([
+            url('^create/$', influxdb.CreateGraphTemView.as_view(), name='influx_graph_create'),
+            url('^list/$', influxdb.GraphListView.as_view(), name='influx_graph_list'),
+        ])),
+    ])),
 ]

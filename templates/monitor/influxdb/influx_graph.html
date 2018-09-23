@@ -2,15 +2,42 @@
 
 {% block breadcrumb %}
     <li><i class="fa fa-fw fa-home"></i>监控配置<span class="divider"></span></li>
-    <li><a href="{% url "influx_graph" %}">性能监控</a><span class="divider"></span></li>
+    <li><a href="{% url "influx_graph" %}">系统性能</a><span class="divider"></span></li>
 {% endblock %}
 
 {% block body %}
-    <div class="ibox float-e-margins table-bordered">
-        <div class="ibox-content">
-            <div class="">
-                <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-                <div id="main" style="width: 620px;height:400px;"></div>
+    <!-- 主机流量：traffic -->
+    <div class="col-sm-6 right">
+        <div class="ibox float-e-margins table-bordered">
+            <div class="ibox-content">
+                <div class="">
+                    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                    <div id="traffic" style="width: 500px;height:300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 right">
+        <div class="ibox float-e-margins table-bordered">
+            <div class="ibox-content">
+                <div id="mem" style="width: 500px;height:300px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 right">
+        <div class="ibox float-e-margins table-bordered">
+            <div class="ibox-content">
+                <div id="disk" style="width: 500px;height:300px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 right">
+        <div class="ibox float-e-margins table-bordered">
+            <div class="ibox-content">
+                <div id="cpu" style="width: 500px;height:300px;"></div>
             </div>
         </div>
     </div>
@@ -19,24 +46,24 @@
 
 {% block js %}
     <script type="text/javascript">
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'));
-
         // 后端传过来的数据
-        var series = {{ series|safe }}
-        var categories = {{ categories|safe }}
+        var series = {{ series|safe }};
+        var categories = {{ categories|safe }};
 
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('traffic'));
 
-        // 指定图表的配置项和数据
-        var base = +new Date(1968, 9, 3);
-        var oneDay = 24 * 3600 * 1000;
-        var date = [];
-        var data = [Math.random() * 300];
-        for (var i = 1; i < 20000; i++) {
+        /**
+         // 指定图表的配置项和数据
+         var base = +new Date(1968, 9, 3);
+         var oneDay = 24 * 3600 * 1000;
+         var date = [];
+         var data = [Math.random() * 300];
+         for (var i = 1; i < 20000; i++) {
             var now = new Date(base += oneDay);
             date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
             data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
-        }
+        }**/
 
         var option = {
             // 提示框组件
@@ -44,16 +71,26 @@
                 trigger: 'axis',
                 position: function (pt) {
                     return [pt[0], '10%'];
+                },
+                formatter: function (params) {
+                    ret = params[0].axisValueLabel + '<br>';
+                    $.each(params, function (i, graph_obj) {
+                        ret += graph_obj.marker + graph_obj.seriesName + ": " +
+                            (graph_obj.value / 1024 / 1024).toFixed(1) +
+                            '<br>' // toFixed(1) 保留一位小数
+                    });
+                    //console.log(params)
+                    return ret
                 }
             },
 
             // 标题组件，包含主标题和副标题
             title: {
                 left: 'center',
-                text: '流量图',
+                text: '主机流量图',
             },
 
-            // 工具栏。内置有导出图片，数据视图，动态类型切换，数据区域缩放，重置五个工具
+            // 工具栏, 内置有导出图片，数据视图，动态类型切换，数据区域缩放，重置五个工具
             toolbox: {
                 feature: {
                     dataZoom: {
@@ -64,53 +101,69 @@
                 }
             },
 
-            // 直角坐标系 grid 中的 x 轴
+            // 直角坐标系grid中的x轴
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: categories
+                /** 前端时间处理
+                axisLabel: {
+                    // 使用函数模板，函数参数分别为刻度数值（类目），刻度的索引
+                    formatter: function (value) {
+                        // 格式化成月/日，只在第一个刻度显示年份
+                        var date = new Date(parseInt(value) * 1000);
+                        return date.toLocaleString()
+                    },
+                }, **/
+                // data: categories,
             },
 
-            // 直角坐标系 grid 中的 y 轴
+            // 直角坐标系grid中的y轴
             yAxis: {
                 type: 'value',
+                axisLabel: {
+                    formatter: function (value) {
+                        // console.log(typeof value)
+                        // console.log(value)
+                        return (value / 1024 / 1024).toFixed()
+                    }
+                }
             },
 
             // 系列列表。每个系列通过 type 决定自己的图表类型
-            series: [
-                {
-                    name: '流量',
-                    type: 'line',
-                    smooth: true,
-                    symbol: 'none',
-                    sampling: 'average',
-                    itemStyle: {
-                        color: 'rgb(255, 70, 131)'
-                    },
-                    areaStyle: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                            offset: 0,
-                            color: 'rgb(255, 158, 68)'
-                        }, {
-                            offset: 1,
-                            color: 'rgb(255, 70, 131)'
-                        }])
-                    },
-                    // data: [23,  44,  55,  19, 23,  44,  55,  19,23,  44,  55,  19, 1 ,3,4,5,7,88,99,00,77,66,45,33]
-                    data: series
-                }
-            ]
+            /**series: [
+
+             {
+                 name: '流量',
+                 type: 'line',
+                 smooth: true,
+                 symbol: 'none',
+                 sampling: 'average',
+                 itemStyle: {
+                     color: 'rgb(255, 70, 131)'
+                 },
+
+                 areaStyle: {
+                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                         offset: 0,
+                         color: 'rgb(255, 158, 68)'
+                     }, {
+                         offset: 1,
+                         color: 'rgb(255, 70, 131)'
+                     }])
+                 },
+                 //data: series
+             }
+             ]  **/
         };
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
-        /**
+
         var new_option = {
-             xAxis: {
-                 data: categories
-             },
-            series: series
+            xAxis: {
+                data: categories
+            },
+            series: series,  // 后端定义的列表数据类型
         };
-        myChart.setOption(new_option);
-    **/
+        myChart.setOption(new_option);  //更新 myChart.setOption(option);
     </script>
 {% endblock %}
