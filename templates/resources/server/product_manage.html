@@ -1,0 +1,370 @@
+{% extends "public/layout.html" %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="/static/zTree_v3-master/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <style>
+        .ztree * {
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+            line-height: 16px;
+        }
+
+        #product_info {
+            padding-bottom: 25px;
+        }
+
+        #modify {
+            width: 100%;
+            height: 100%;
+            display: none
+        }
+
+        .controls {
+            display: none;
+        }
+
+        #infomatioin {
+            width: 100%;
+            height: 100%;
+            display: none
+        }
+
+        #infomatioin ul li {
+            line-height: 45px;
+            font-size: 16px;
+        }
+
+        #infomatioin ul li label {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            font-weight: bold;
+            margin-right: 25px;
+        }
+
+        #infomatioin ul li button {
+            margin-left: 125px;
+        }
+
+        #hostlist {
+            display: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 10px;
+        }
+
+        #hostlist li {
+            margin-right: 10px;
+            min-width: 200px;
+        }
+
+        .header-btn {
+            margin-left: 20px;
+        }
+
+    </style>
+
+
+{% endblock %}
+
+
+{% block breadcrumb %}
+    <li><i class="fa fa-fw fa-home"></i>资产管理<span class="divider"></span></li>
+    <li><a href="/resources/product/manage">业务线管理</a><span class="divider"></span></li>
+{% endblock %}
+
+
+{% block body %}
+    <div id="content-body">
+        <div>
+            <caption>
+                <a href="{% url 'product_add' %}" class="btn btn-primary btn-sm">增加业务线</a>
+                <a href="{% url 'code_deploy' %}" class="btn btn-danger btn-sm ">代码发布</a>
+            </caption>
+
+            <!--
+            <form id="search_form" method="get" action="" class="pull-left mail-search">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" id="search_input" name="keyword"
+                           placeholder="Search">
+                    <div class="input-group-btn">
+                        <button id="search_btn" type="submit" class="btn btn-sm btn-primary">
+                            -搜索-
+                        </button>
+                    </div>
+                </div>
+            </form> -->
+        </div>
+
+        <div class="col-xs-3">
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
+        <div class="col-xs-5">
+            <div class="row" id="product_info">
+                <div id="infomatioin">
+                    <ul class="list-unstyled">
+                        <li style="font-size: 14px;"><label>分类名：</label><span id="info_service_name"></span></li>
+                        <li style="font-size: 14px;"><label>上级分类：</label><span id="info_pid"></span></li>
+                        <li style="font-size: 14px;"><label>字母简称：</label><span id="info_module_letter"></span></li>
+                        <li style="font-size: 14px;"><label>业务负责人：</label><span id="info_dev_interface"></span></li>
+                        <li style="font-size: 14px;"><label>运维负责人：</label><span id="info_op_interface"></span></li>
+                        <li>
+                            <button class="btn btn-primary btn-sm" id="info_modify_btn">修改</button>
+                        </li>
+                    </ul>
+                </div>
+                <div id="modify">
+                    <form class="form-horizontal" role="form" parsley-validate id="basicvalidations" method="post">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">分类名<span
+                                    style="color: red"> *</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="service_name" autocomplete="off"
+                                       id="input_service_name" parsley-trigger="change" parsley-required="true"
+                                       parsley-minlength="2" parsley-validation-minlength="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">上级分类<span
+                                    style="color: red"> *</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" readonly autocomplete="off" id="input_pid"
+                                       parsley-trigger="change" parsley-required="true" parsley-minlength="2"
+                                       parsley-validation-minlength="1">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">字母简称<span
+                                    style="color: red"> *</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="module_letter" autocomplete="off"
+                                       id="input_module_letter" parsley-trigger="change" parsley-required="true"
+                                       parsley-minlength="2" parsley-validation-minlength="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">业务负责人<span
+                                    style="color: red"> *</span></label>
+                            <div class="col-sm-8">
+                                <select data-placeholder="" multiple="选择联系人" tabindex="3" name="dev_interface"
+                                        id="input_dev_interface" class="chosen-select form-control chosen-transparent">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input_op_interface" class="col-sm-2 control-label">运维负责人<span
+                                    style="color: red"> *</span></label>
+                            <div class="col-sm-8">
+                                <select data-placeholder="" multiple="选择联系人" tabindex="3" name="op_interface"
+                                        id="input_op_interface" class="chosen-select form-control chosen-transparent">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-footer">
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <button type="submit" id="submit_modify" class="btn btn-primary btn-sm">提交</button>
+                                <button id="return_info" class="btn btn-default btn-sm">返回</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+        <div class="row">
+            <ul class="list-inline" id="hostlist">
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript" src="/static/zTree_v3-master/js/jquery.ztree.core.js"></script>
+    <script>
+        var data;
+        var hostlist = $("#hostlist");
+        var users = false;
+        var infomatioin_div = $("#infomatioin");
+        var info_service_name = $("#info_service_name");
+        var info_pid = $("#info_pid");
+        var info_module_letter = $("#info_module_letter");
+        var info_dev_interface = $("#info_dev_interface");
+        var info_op_interface = $("#info_op_interface");
+        var info_modify_btn = $("#info_modify_btn");
+        var modify_div = $("#modify");
+        var input_service_name = $("#input_service_name");
+        var input_pid = $("#input_pid");
+        var input_module_letter = $("#input_module_letter");
+        var input_dev_interface = $("#input_dev_interface");
+        var input_op_interface = $("#input_op_interface");
+        var return_info_btn = $("#return_info");
+        var submit_modify = $("#submit_modify");
+        var products = false;
+        var id;
+
+        function show_product_info() {
+            infomatioin_div.hide();
+            modify_div.hide();
+            $.get("{% url 'product_get' %}", {"id": id}, function (res) {
+                if (res.status == 0) {
+                    data = res.data;
+                    infomatioin_div.fadeIn("fast");
+
+                    info_service_name.text(data.service_name);
+                    info_pid.text(data.pid);
+                    info_module_letter.text(data.module_letter);
+                    info_dev_interface.text(data.dev_interface);
+                    info_op_interface.text(data.op_interface);
+                } else {
+                    swal('错误', res.errmsg, "error");
+                }
+
+            });
+        }
+
+        function show_hostlist() {
+            $.get("{% url 'server_get' %}", {"server_purpose": id}, function (res) {
+                $.each(res, function (n, obj) {
+                    hostlist.append("<li>" + obj.hostname + "（" + obj.inner_ip + "）</li>");
+                });
+                hostlist.fadeIn("fast");
+            })
+        }
+
+
+        function zTreeOnClick(event, treeId, treeNode) {
+            id = treeNode.id;
+            show_product_info()
+            hostlist.hide().empty();
+            if (treeNode.pid != 0) {
+                show_hostlist();
+            }
+        };
+        var zTreeObj;
+
+        var setting = {
+            callback: {
+                onClick: zTreeOnClick
+            },
+            view: {
+                fontCss: {fontSize: "16px"}
+            }
+        };
+
+        var zNodes = {{ ztree|safe }};
+        // safa 是将列表数据装成json
+
+
+        $(function () {
+
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+            $.get("{% url 'user_list_get' %}", function (res) {
+                users = res
+            });
+
+            info_modify_btn.click(function () {
+
+                infomatioin_div.hide();
+                modify_div.fadeIn("fast");
+
+                input_service_name.val(data.service_name);
+                input_pid.val(data.pid);
+                input_module_letter.val(data.module_letter);
+                //input_dev_interface.val(data.dev_interface);
+                var selected_dev_email = data.dev_interface.split(",")
+                input_dev_interface.empty().chosen("destroy");
+                var selected_op_email = data.op_interface.split(",");
+                input_op_interface.empty().chosen("destroy");
+                //input_op_interface.val(data.op_interface);
+                $.each(users, function (n, obj) {
+                    var op_option;
+                    var dev_option;
+                    if ($.inArray(obj.email, selected_op_email) >= 0) {
+                        op_option = '<option value="' + obj.email + '" selected>';
+                    } else {
+                        op_option = '<option value="' + obj.email + '">';
+                    }
+                    op_option += obj.email + ' | ' + obj.username + '</option>';
+                    input_op_interface.append(op_option);
+
+                    if ($.inArray(obj.email, selected_dev_email) >= 0) {
+                        dev_option = '<option value="' + obj.email + '" selected>';
+                    } else {
+                        dev_option = '<option value="' + obj.email + '">';
+                    }
+                    dev_option += obj.email + ' | ' + obj.username + '</option>';
+                    input_dev_interface.append(dev_option)
+
+                });
+
+                input_op_interface.chosen({
+                    disable_search_threshold: 10,
+                    no_results_text: "没有找到对应的记录"
+                });
+                input_dev_interface.chosen({
+                    disable_search_threshold: 10,
+                    no_results_text: "没有找到对应的记录"
+                });
+            });
+
+
+            return_info_btn.click(function () {
+                modify_div.hide();
+                infomatioin_div.fadeIn("fast");
+                return false
+            });
+
+            submit_modify.click(function () {
+                var modify_data = {
+                    "id": data.id,
+                    "service_name": input_service_name.val(),
+                    "module_letter": input_module_letter.val(),
+                    "dev_interface": input_dev_interface.val(),
+                    "op_interface": input_op_interface.val()
+                };
+
+                $.ajax({
+                    url: "",
+                    type: "post",
+                    data: modify_data,
+                    success: function (res) {
+                        if (res.status == 0) {
+                            swal({
+                                title: "操作成功",
+                                text: "",
+                                type: "success"
+                            }, function () {
+                                show_product_info()
+                            })
+
+                        } else {
+                            swal('错误', res.errmsg, "error");
+                        }
+                    },
+                    beforeSend: function (xhr, settings) {
+                        var csrftoken = getCookie('csrftoken');
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                        }
+                    }
+                });
+                return false
+            });
+
+            $(".chosen-select").chosen({
+                disable_search_threshold: 10,
+                no_results_text: "没有找到对应的记录"
+            });
+        })
+
+    </script>
+
+{% endblock %}

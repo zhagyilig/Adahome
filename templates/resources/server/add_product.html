@@ -1,0 +1,107 @@
+{% extends "public/layout.html" %}
+
+
+{% block breadcrumb %}
+    <li><i class="fa fa-fw fa-home"></i>资产管理<span class="divider"></span></li>
+    <li><a href="/resources/product/manage/">业务线管理</a><span class="divider"></span></li>
+    <li><a href="{% url 'product_add' %}">增加业务线</a><span class="divider"></span></li>
+{% endblock %}
+
+
+
+{% block body %}
+
+    <div class="ibox float-e-margins table-bordered">
+        <div class="ibox-content">
+            <div class="content-body">
+                <form class="form-horizontal" role="form" parsley-validate id="basicvalidations" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="manufacturers" class="col-sm-2 control-label">业务线名称<span
+                                style="color: red;"> *</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="service_name" autocomplete="off"
+                                   id="service_name"
+                                   parsley-trigger="change" parsley-required="true" parsley-minlength="2"
+                                   parsley-validation-minlength="1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="switch_type" class="col-sm-2 control-label">简称<span
+                                style="color: red;"> *</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="module_letter" autocomplete="off"
+                                   id="module_letter"
+                                   parsley-trigger="change" parsley-required="true" parsley-minlength="2"
+                                   parsley-validation-minlength="1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="select_cabinet_id" class="col-sm-2 control-label">上级业务线<span
+                                style="color: red;"> *</span></label>
+                        <div class="col-sm-8" id="pid">
+                            <select class="chosen-select chosen-transparent form-control" name="pid" id="select_pid"
+                                    parsley-trigger="change" parsley-required="true" parsley-error-container="#pid">
+                                <option value="0">顶级</option>
+                                {% for product in products %}
+                                    <option value="{{ product.id }}">{{ product.service_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="select_category" class="col-sm-2 control-label">业务负责人<span
+                                style="color: red;"> *</span></label>
+                        <div class="col-sm-8" id="dev_interface">
+                            <select class="chosen-select chosen-transparent form-control" data-placeholder=""
+                                    multiple="选择联系人"
+                                    name="dev_interface" id="select_dev_interface" parsley-trigger="change"
+                                    parsley-required="true" parsley-error-container="#dev_interface">
+                                {% for user in userlist %}
+                                    <option value="{{ user.email }}">{{ user.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="select_category" class="col-sm-2 control-label">运维负责人<span
+                                style="color: red;"> *</span></label>
+
+                        <div class="col-sm-8" id="op_interface">
+
+                            <select class="chosen-select chosen-transparent form-control" data-placeholder=""
+                                    multiple="选择联系人"
+                                    name="op_interface" id="select_dev_interface" parsley-trigger="change"
+                                    parsley-required="true" parsley-error-container="#op_interface">
+                                {% for user in userlist %}
+                                    <option value="{{ user.email }}">{{ user.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-footer">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function () {
+
+            $(".chosen-select").chosen({disable_search_threshold: 8});
+        })
+    </script>
+{% endblock %}

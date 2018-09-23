@@ -1,0 +1,46 @@
+{% extends "public/layout.html" %}
+
+
+{% block body %}
+    <h1>dashboard</h1>
+{% endblock %}
+
+{% block js %}
+    <script>
+        var next_url = "{{ next_url }}";
+        var data = {{ message|safe }};
+
+        $(function () {
+            if (data.status == 0) {
+                console.log("success");
+                swal("Good job!", "You clicked the button!", "success")
+                swal({
+                    title: "操作成功",
+                    text: "",
+                    type: "success"
+                }, function () {
+                    if (next_url != "") {
+                        setTimeout(function () {
+                            window.location.href = next_url
+                        }, 150)
+                    }
+
+                })
+            } else {
+                console.log("error")
+                swal({
+                    title: "操作失败",
+                    text: data.errmsg,
+                    type: "error"
+                }, function () {
+                    if (next_url != "") {
+                        setTimeout(function () {
+                            window.location.href = next_url
+                        }, 150)
+                    }
+
+                })
+            }
+        })
+    </script>
+{% endblock %}

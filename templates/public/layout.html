@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Ada | CMDB {{ title }}</title>
+    {#<title>{% block title %}{% endblock %}</title>#}
+    <link href="/static/img/Ada.ico" type="image/x-icon" rel="shortcut icon">
+
+    <!--第三方插件样式-->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/vendor/datatable/datatable.css" rel="stylesheet">
+    <link href="/static/vendor/metismenu/metismenu.min.css" rel="stylesheet">
+    <link href="/static/vendor/alert/sweet-alert.css" rel="stylesheet">
+    <link href="/static/vendor/bootstrap-multiselect.css" rel="stylesheet">
+    <link href="/static/vendor/validform.css" rel="stylesheet">
+    <link href="/static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/chosen/css/chosen.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/chosen/css/chosen-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <!--自定义样式文件 ＊重要＊-->
+    <link href="/static/vendor/sb-admin-2.css" rel="stylesheet">
+
+
+    <style type="text/css">
+        .navbar-header {
+            width: 200px;
+            text-align: center;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+        }
+
+        .table {
+            margin-top: 10px;
+        }
+
+        .hover {
+            cursor: pointer;
+        }
+
+        .progress-reboot {
+            position: absolute;
+            height: 2px;
+            top: 0px;
+            background: #337ab7;
+            width: 0%;
+            z-index: 2000;
+        }
+
+        #main-content .add-btn {
+            position: absolute;
+            z-index: 100;
+            width: 200px;
+        }
+
+        #wrapper {
+            background: #2e3c4e;
+            {#height: 720px;#}
+        }
+
+        .navbar-default .navbar-nav > li > a {
+            color: white;
+        }
+
+        .navbar-default .navbar-nav > li > a:hover {
+            background: #299d71;
+        }
+
+        .navbar-default .navbar-brand {
+            color: white;
+        }
+
+        .navbar-default .navbar-brand:hover {
+            color: white;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        button.detail {
+            margin-left: 10px;
+        }
+
+        .sweet-alert h2 {
+            margin-top: 30px;
+        }
+
+        .nav > li.active {
+            border-left: 4px solid #19aa8d;
+            background: #293846;
+        }
+
+    </style>
+    {% block css %}
+
+    {% endblock %}
+</head>
+
+<body>
+<div id="wrapper"> <!--页面全局样式开始-->
+    {% include "public/top_nav.html" %}
+
+    <!--页面侧部 -->
+    {% block navbar %}
+        {% include "public/default_navbbar.html" %}
+    {% endblock %}
+
+    <!--页面正文部分开始-1-->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div id='main-content' class="col-md-12" style='padding-top:20px;'>
+                    <div id="content-header">
+                        <ol class="breadcrumb">
+                            {% block breadcrumb %}
+                                <li><i class="fa fa-fw fa-home"></i><a href="/">控制面板</a><span class="divider"></span></li>
+                            {% endblock %}
+                        </ol>
+                        <hr>
+                    </div><!--end content-header-->
+                    {% block body %}
+
+                    {% endblock %}
+                </div>
+            </div>
+                    <hr>
+            {% include 'public/footer.html' %}
+        </div>
+
+    </div>  <!--页面正文部分结束-1-->
+</div><!--页面全局样式结束-1-->
+
+<!--js 部分-->
+<script src="/static/vendor/jquery/jquery.min.js"></script>
+<script src="/static/vendor/jquery/jquery.cookie.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/chosen/chosen.jquery.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="/static/vendor/datatable/datatable.js"></script>
+<script src="/static/vendor/metismenu/metismenu.min.js"></script>
+<script src="/static/vendor/validform.js"></script>
+<script src="/static/vendor/bootstrap-multiselect.js"></script>
+<script src='/static/vendor/alert/sweet-alert.min.js'></script>
+<script src='/static/parsley/parsley.min.js'></script>
+<script src='/static/js/opsweb.js'></script>
+<script src='/static/js/echarts.min.js'></script>
+
+
+<script>
+    function apply_menu(obj) {
+        obj.parent('li').addClass("active").parent('ul').addClass('in').attr("aria-expanded", "true").siblings('a').attr("aria-expanded", "true").parent("li").addClass("active")
+    }
+
+    $(function () {
+        $("#side-menu").metisMenu();
+    })
+</script>
+{% block js %}
+
+{% endblock %}
+
+</body>
+</html>

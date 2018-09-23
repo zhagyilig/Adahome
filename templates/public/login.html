@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta name="Ada" content="index,follow">
+    <meta name="Author" content="Ada">
+
+    <link href="/static/img/Ada.ico" type="image/x-icon" rel="shortcut icon">
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/vendor/alert/sweet-alert.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #eee;
+        }
+
+        .form-signin {
+            max-width: 330px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+    </style>
+    <title>Ada | Login</title>
+</head>
+
+<body>
+<!--loginbox again-->
+<div class="container" style="margin-top: 80px;">
+    <form class="form-signin" id="loginform">
+        <h3 class="form-signin-heading" style="text-align: center;">欢迎登陆Ada运维自动化平台</h3>
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" id="username" class="form-control" name="username" placeholder="用户名"/>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" class="form-control" name="password" placeholder="密码"/>
+        </div>
+        <button type="submit" class="btn btn-primary block full-width m-b">登陆</button>
+        <a id='forget' style="cursor:pointer">忘记密码?</a>
+    </form>
+</div>
+
+<script type="text/javascript" src="/static/vendor/alert/sweet-alert.min.js"></script>
+<script type="text/javascript" src="/static/vendor/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    /* 忘记密码提示*/
+    $("#forget").click(function () {
+        str = "请联系管理员" + '\n' + "Ada@ada.com";
+        swal({
+            title: '',
+            text: str,
+            button: false,
+        })
+    });
+
+
+    $('#loginform').on('submit', function () {
+        var str = $('#loginform').serialize();
+        $.post('#', str, function (res) {
+            if (res.status == 0) {
+                location.href = res.next_url
+            } else {
+                swal({
+                    title: res.errmsg,
+                    type: "error",
+                    confirmButtonText: "知道了"
+                }, function () {
+                    $("#username").val("");
+                    $("#password").val("")
+                });
+
+            }
+        });
+        return false;
+    })
+
+</script>
+</body>
+</html>
+

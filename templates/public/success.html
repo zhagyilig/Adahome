@@ -1,0 +1,39 @@
+{% extends "public/layout.html" %}
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block css %}
+    <style>
+        #page-wrapper {
+            margin: 0px;
+        }
+
+        #content-header {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+    <h1><p class="text-center">操作成功</p></h1>
+    <h4><p class="text-center">自动跳转······</p></h4>
+{% endblock %}
+
+{% block js %}
+    <script>
+        var next_url = "{{ next_url }}";
+        if (next_url == "") {
+            next_url = "/"
+        }
+        $(function () {
+
+            setTimeout(function () {
+                window.location.href = next_url;
+            }, 1000)
+
+        })
+    </script>
+{% endblock %}

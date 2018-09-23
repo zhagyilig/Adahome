@@ -1,0 +1,132 @@
+{% extends "public/layout.html" %}
+{% load custom %}
+{% block breadcrumb %}
+    <li><i class="fa fa-fw fa-home"></i>资产管理<span class="divider"></span></li>
+    <li><a href="{% url "server_list" %}">资产列表</a><span class="divider"></span></li>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="ibox float-e-margins table-bordered">
+        <div class="ibox-content">
+            <div>
+                <caption>
+                    <a href="{% url 'server_list' %}" class="btn btn-primary btn-sm">添加资产</a>
+                    <a href="#" class="btn btn-danger btn-sm">删除所选</a>
+                    <a href="{% url 'server_refresh' %}" class="btn btn-default btn-sm">刷新主机信息</a>
+                </caption>
+
+                <form id="search_form" method="get" action="" class="pull-right mail-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" id="search_input" name="search_hostname"
+                               placeholder="按主机名">
+                        <div class="input-group-btn">
+                            <button id="search_btn" type="submit" class="btn btn-sm btn-primary">
+                                -搜索-
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <table class="table table-striped table-hover table-bordered">
+                <tr>
+                    <th class="text-center">
+                        <input type="checkbox" id="check_all" onclick="checkAll('check_all', 'checked')">
+                    </th>
+                    <!--<th>序号</th>-->
+                    <th>主机名</th>
+                    <th>IP地址</th>
+                    <th>操作系统</th>
+                    <th>CPU核数</th>
+                    <th>内存</th>
+                    <th>磁盘</th>
+                    <th>业务线</th>
+                    <th>产品线</th>
+                    <th>最后检查</th>
+                    <th>状态</th>
+                    <th>机房</th>
+                    <th>操作</th>
+                </tr>
+                {% for server_list in object_list %}
+                    <tr class="gradex">
+                        <td class="text-center">
+                            <input type="checkbox" name="checked" value="5000">
+                        </td>
+                        {#<td>{{ forloop.counter }}</td>#}<!-- 显示序号 -->
+                        <td><a href="#">{{ server_list.hostname }}</a></td>
+                        <td>{{ server_list.inner_ip }}</td>
+                        <td>{{ server_list.os }}</td>
+                        {# <td>{{ server_list.server_cpu }}</td>#}
+                        <td>{{ server_list.server_cpu }}</td>
+                        <td>{{ server_list.server_mem }}</td>
+                        <td>{{ server_list.server_disk }}</td>
+                        {#<td>{{ server_list.service_id|default_if_none:'' }}</td>#}
+
+                        <td>{{ server_list.service_id|get_product:product }}</td>
+                        {# |get_product 是custom的函数, 自己的写过滤器；product是view传的 #}
+
+                        {# <td>{{ server_list.server_purpose|default_if_none:'' }}</td>#}
+                        <td>{{ server_list.server_purpose|get_product:product }}</td>
+
+                        <td>{{ server_list.check_update_time }}</td>
+
+                        {% if server_list.status == 'True' %}
+                            <td><i style="color: limegreen" class="fa fa-arrow-up"></i></td>
+                        {% else %}
+                            <td><i style="color: red" class="fa fa-arrow-down"></i></td>
+                        {% endif %}
+
+                        <td>武汉汉口</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-primary btn-xs dropdown-toggle" type="button"
+                                        id="dropdownMenu1"
+                                        data-toggle="dropdown">编辑<span class="caret"></span>
+                                </button><!--点击的下拉菜单-->
+                                <ul class="dropdown-menu" role="menu" aria-describedby="dropdownMenu1">
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1"
+                                           href="{% url 'server_modify_product' %}?id={{ server_list.id }}&next={{ request.get_full_path|urlencode }}">修改业务线</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <a type="button" class="btn btn-danger btn-xs" href="#">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!--页码操作开始-1-->
+        <div class="panel-default">
+            <center> <!--居中显示开始-1-->
+                <ul class="pagination">
+                    <li><a href="{{ request.path }}?page=1{{ search_data }}">首页</a></li>
+                    {% if page_obj.has_previous %}
+                        <li><a href="{{ request.path }}?page=
+                            {{ page_obj.previous_page_number }}{{ search_data }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="previous disabled"><a>&laquo;</a></li>
+                    {% endif %}
+
+                    {% for i in page_range %}
+                        <li {% if page_obj.number == i %}class="active"{% endif %}><a
+                                href="{{ request.path }}?page={{ i }}{{ search_data }}">{{ i }}</a></li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li><a href="{{ request.path }}?page=
+                                {{ page_obj.next_page_number }}{{ search_data }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="previous disabled"><a>&raquo;</a></li>
+                    {% endif %}
+                    <li><a href="{{ request.path }}?page={{ page_obj.paginator.num_pages }}{{ search_data }}">末页</a>
+                    </li>
+                </ul>
+            </center><!--居中显示结束-1-->
+        </div><!--页码操作结束-1-->
+    </div>
+{% endblock %}

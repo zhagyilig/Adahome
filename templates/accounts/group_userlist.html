@@ -1,0 +1,136 @@
+{% extends "public/layout.html" %}
+
+{% block breadcrumb %}
+    <li><i class="fa fa-fw fa-home"></i><a href="#">用户管理</a><span class="divider"></span></li>
+    <li><a href="{% url "group_list" %}">用户组列表</a><span class="divider"></span></li>
+    <li class="active">用户组成员<span class="divider"></span></li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox float-e-margins table-bordered">
+
+        <div class="ibox-content">
+            <div class="">
+                <caption><!--使用ajax-->
+                    <button type="button" class="btn btn-primary btn-sm" id="add_user">添加现有用户到组</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="del_user">移除所选</button>
+                </caption>
+
+                <form id="search_form" method="get" action="" class="pull-right mail-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" id="search_input" name="keyword"
+                               placeholder="Search">
+                        <div class="input-group-btn">
+                            <button id="search_btn" type="submit" class="btn btn-sm btn-primary">
+                                -搜索-
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <table class="table table-striped table-hover table-bordered" id="editable">
+                <tr>
+                    <th class="text-center">
+                        <input type="checkbox" id="check_all" onclick="checkAll('check_all', 'checked')">
+                    </th>
+                    <th>用户名</th>
+                    <th>邮箱</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+
+                {% for user_obj in object_list %}
+                    <tr class="gradex">
+                        <td class="text-center">
+                            <input type="checkbox" name="checked" value="5000">
+                        </td>
+                        <td class="text-center"><a href="#用户信息">{{ user_obj.username }}</a></td>
+                        <td class="text-center">{{ user_obj.email }}</td>
+                        <td class="text-center">
+                            {% if user_obj.is_active %}
+                                <span class="glyphicon glyphicon-ok-circle text-info" aria-hidden="true">正常</span>
+                            {% else %}
+                                <span class="glyphicon glyphicon-remove-circle text-danger" aria-hidden="true">禁用</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">  <!--修改开始-1-->
+                            <div class="btn-group">
+                                <div class="btn-group">
+                                    <button class="btn btn-danger btn-xs delete" data="{{ user_obj.id }}" type="button">移除组</button>
+                                </div>
+                            </div> <!--修改结束-1-->
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!--页码操作开始-1-->
+        <div>
+            <center> <!--居中显示开始-1-->
+                <ul class="pagination">
+                    <li><a href="{% url 'group_page_list' %}?page=1">首页</a></li>   <!--首页-->
+
+                    {% if page_obj.has_previous %}  <!--如果有上一页，显示上一页按钮-->
+                        <Li><a href="{% url 'group_page_list' %}?page={{ page_obj.previous_page_number }}"
+                               aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><a aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span></a>
+                        </li>
+                    {% endif %}
+
+                    {% for p in page_obj.paginator.page_range %}  <!--页码的范围-->
+                        {% if p == page_obj.number %}  <!--当前页的序号突出显示-->
+                            <li class="active"><a href="{% url 'group_page_list' %}?page={{ p }}">{{ p }}</a></li>
+                        {% else %}
+                            <li><a href="{% url 'group_page_list' %}?page={{ p }}">{{ p }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %} <!--如果有下一页，显示下一页按钮-->
+                        <li><a href="{% url 'group_page_list' %}?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><a aria-label="Previous">
+                            <span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    {% endif %}
+
+                    <li><a href="{% url 'group_page_list' %}?page={{ page_obj.paginator.num_pages }}">末页</a></li> <!--尾页-->
+                </ul>
+            </center><!--居中显示结束-1--><br><br><br>
+        </div><!--页码操作结束-1-->
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function () {
+            $(".delete").click(function () {
+                var uid = $(this).attr("data"); // 点击后取出data属性(this: 这个点击; attr: 属性)
+                var gid = "{{ gid }}";
+                //console.log("点击移除组按钮 " + uid) // 调试
+
+              $.ajax({
+                url: "{% url 'user_modify_group' %}",
+                type: "delete",
+                data: {"uid": uid, "gid": gid},
+                success: function (res) {
+                    if (res.status != 0) {
+                        swal('操作失败', res.errmsg, "error")
+                    } else {
+                        swal('操作成功', '', "success")
+                        window.location.reload(setTimeout(30000)); // 动态刷新，一个http请求
+                    }
+                },
+            })
+            })
+        })
+    </script>
+{% endblock %}

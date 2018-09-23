@@ -1,0 +1,162 @@
+{% extends "public/layout.html" %}
+
+{% block body %}
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins table-bordered">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">Users</span>
+                        <h5>用户总数</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins"><a href="{% url "user_list" %}">88</a></h1>
+                        <small>All user</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins table-bordered">
+                    <div class="ibox-title">
+                        <span class="label label-info pull-right">Hosts</span>
+                        <h5>主机总数</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins"><a href="/jasset/asset/list/">31</a></h1>
+                        <small>All host</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins table-bordered">
+                    <div class="ibox-title">
+                        <span class="label label-primary pull-right">Online</span>
+                        <h5>在线用户</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins"><a href="/jlog/list/online/"> <span id="online_users">37</span></a></h1>
+
+                        <small>Online user</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins table-bordered">
+                    <div class="ibox-title">
+                        <span class="label label-danger pull-right">Connected</span>
+                        <h5>已连接服务器</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins"><a href="/jlog/list/online/"> <span id="online_hosts">26</span></a></h1>
+                        <small>Connected host</small>
+                    </div>
+                </div>
+            </div>
+
+            <!--最近十次登陆开始-->
+            <div class="col-sm-4">
+            <div class="ibox float-e-margins table-bordered">
+                <div class="ibox-title">
+                    <h5>最近十次登录</h5>
+                    <div class="ibox-tools">
+                        <span class="label label-info-light">10 Messages</span>
+                    </div>
+                </div>
+                <div class="ibox-content ibox-heading">
+                    <h3><i class="fa fa-paper-plane-o"></i> 登录记录 </h3>
+                    <small><i class="fa fa-map-marker"></i> 最近十次登录记录.</small>
+                </div>
+                <div class="ibox-content">
+                    <div>
+                        <div class="feed-activity-list">
+
+                            <div class="feed-element">
+                                <a href="#" class="pull-left">
+                                    <img alt="image" class="img-circle" src="/static/img/favicon.ico">
+                                </a>
+                                <div class="media-body ">
+                                    <small class="pull-right text-navy">25 minutes ago</small>
+                                    <strong>zhangyilig</strong> 登录了Mysql of db_ezbuy trackingorder ezseller <br>
+                                    <small class="text-muted">Aug. 14, 2018, 10:14 p.m.</small>
+                                </div>
+                            </div>
+
+                            <div class="feed-element">
+                                <a href="#" class="pull-left">
+                                    <img alt="image" class="img-circle" src="/static/img/loading.gif">
+                                </a>
+                                <div class="media-body ">
+                                    <small class="pull-right text-navy">25 minutes ago</small>
+                                    <strong>tianjiao</strong> 登录了Mysql of db_ezbuy trackingorder ezseller <br>
+                                    <small class="text-muted">Aug. 14, 2018, 10:14 p.m.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins table-bordered">
+                <div class="ibox-title">
+                    <h5>一周Top10用户</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user"></ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content ibox-heading">
+                    <h3><i class="fa fa-user"></i> 一周Top10用户 </h3>
+                    <small><i class="fa fa-map-marker"></i> 用户登录次数及最近一次登录记录. </small>
+                </div>
+                <div class="ibox-content inspinia-timeline">
+                            <div class="timeline-item">
+                                <div class="row">
+                                    <div class="col-xs-5 date">
+                                        <i class="fa fa-info-circle"></i>
+                                        <strong>zhangyiling</strong>
+                                        <br/>
+                                        <small class="text-navy">83次</small>
+                                    </div>
+                                    <div class="col-xs-7 content no-top-border">
+                                        <p class="m-b-xs">最近一次登录主机</p>
+                                        <p>Server of logs</p>
+                                        <p>于2018-08-14 14:00:14</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="row">
+                                    <div class="col-xs-5 date">
+                                        <i class="fa fa-info-circle"></i>
+                                        <strong>tianjiao</strong>
+                                        <br/>
+                                        <small class="text-navy">77次</small>
+                                    </div>
+                                    <div class="col-xs-7 content no-top-border">
+                                        <p class="m-b-xs">最近一次登录主机</p>
+                                        <p>Mysql of  db_ezbuy trackingorder ezseller</p>
+                                        <p>于2018-08-14 22:14:56</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,202 @@
+<!--用户组列表-->
+
+{% extends "public/layout.html" %}
+
+{% block breadcrumb %}
+    <li><i class="fa fa-fw fa-home"></i><a href="#">用户管理</a><span class="divider"></span></li>
+    <li><a href="{% url "group_list" %}">用户组列表</a><span class="divider"></span></li>
+{% endblock %}
+
+{% block body %}
+
+    <div class="ibox float-e-margins table-bordered">
+{#        <div class="ibox-title">#}
+{#            <h5> 查看用户组 </h5>#}
+{#            <div class="ibox-tools">#}
+{#                <a class="collapise-link">#}
+{#                    <i class="fa fa-chevron-up"></i>#}
+{#                </a>#}
+{#                <a class="dropdown-toggle" data-toggle="dropdown" href="#">#}
+{#                    <i class="fa fa-wrench"></i>#}
+{#                </a>#}
+{#                <a class="close-link">#}
+{#                    <i class="fa fa-times"></i>#}
+{#                </a>#}
+{#            </div>#}
+{#        </div>#}
+
+        <div class="ibox-content">
+            <div>
+                <caption><!--使用ajax-->
+                    <button type="button" class="btn btn-primary btn-sm" id="add_group">添加用户组</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="del_group">删除所选</button>
+                </caption>
+
+                <form id="search_form" method="get" action="" class="pull-right mail-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" id="search_input" name="keyword"
+                               placeholder="Search">
+                        <div class="input-group-btn">
+                            <button id="search_btn" type="submit" class="btn btn-sm btn-primary">
+                                -搜索-
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <table class="table table-striped table-hover table-bordered">
+                <tr>
+                    <th class="text-center">
+                        <input type="checkbox" id="check_all" onclick="checkAll('check_all', 'checked')">
+                    </th>
+                    <!--<th>序号</th>-->
+                    <th>组名</th>
+                    <th>成员数目</th>
+                    <th>操作</th>
+                </tr>
+                {% for group_list in object_list %}
+                    <tr class="gradex">
+                        <td class="text-center">
+                            <input type="checkbox" name="checked" value="5000">
+                        </td>
+                        <!--<td>{{ forloop.counter }}</td> --> <!-- 显示序号 -->
+                        <td>{{ group_list.name }}</td>
+                        <td><a href="#">{{ group_list.user_set.count }}</a></td>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-xs"
+                               href="{% url 'group_members_list' %}?gid={{ group_list.id }}">成员列表</a>
+                            <div class="btn-group"><!--点击的下拉菜单-->
+                                <button class="btn btn-info btn-xs dropdown-toggle" type="button" id="dropdownMenu1"
+                                        data-toggle="dropdown">权限<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-describedby="dropdownMenu1">
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">查看权限</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">修改权限</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-xs del_group" groupid="{{ group_list.id }}">
+                                删除
+                            </button>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div>  <!--页码操作开始-1-->
+            <center> <!--居中显示开始-1-->
+                <ul class="pagination">
+                    <li><a href="{% url 'group_list' %}?page=1">首页</a></li>  <!--首页-->
+
+                    {% if page_obj.has_previous %}  <!--如果有上一页，显示上一页按钮-->
+                        <Li><a href="{% url 'group_list' %}?page={{ page_obj.previous_page_number }}"
+                               aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><a aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span></a>
+                        </li>
+                    {% endif %}
+
+                    {% for p in page_obj.paginator.page_range %}  <!--页码的范围-->
+                        {% if p == page_obj.number %}  <!--当前页的序号突出显示-->
+                            <li class="active"><a href="{% url 'group_list' %}?page={{ p }}">{{ p }}</a></li>
+                        {% else %}
+                            <li><a href="{% url 'group_list' %}?page={{ p }}">{{ p }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %} <!--如果有下一页，显示下一页按钮-->
+                        <li><a href="{% url 'group_list' %}?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><a aria-label="Previous">
+                            <span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    {% endif %}
+
+                    <li><a href="{% url 'group_list' %}?page={{ page_obj.paginator.num_pages }}">末页</a></li> <!--尾页-->
+                </ul>
+            </center><!--居中显示结束-1-->
+        </div><!--页码操作结束-1-->
+    </div>
+
+    <!--创建用户组模态窗开始-1-->
+    <div class="modal fade" id="create_group" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" , class="close" data-dismiss="modal">x</button>
+                    <h4>添加用户组</h4>
+                </div>
+
+                <div class="modal-body form-inline">
+                    <div class="form-group">
+                        <label for="exampleInpueName2">用户组: </label>
+                        <input type="text" class="form-control" id="form_groupname" placeholder="请输入用户组名称"/>
+                    </div>
+                    <button class="btn btn-primary" id="create_group_btn">提交</button>
+                </div>
+                <div class="modal-footer">
+                    <input class="btn btn-default" data-dismiss="modal" aria-hidden="true" type="button" value="取消"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--创建用户组模态窗结束-1-->
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function () {
+            // 创建用户组
+            //点击创建用户组，显示模态窗
+            $("#add_group").click(function () {
+                var create_group_modal = $("#create_group");
+                create_group_modal.modal("show");
+
+                // 弹出模态窗之后，获取表单数据
+                $("#create_group_btn").click(function () {
+                    var form_groupname_input = $("#form_groupname");
+                    var group_name = $("#form_groupname").val()
+                    form_groupname_input.val(" "); // 获取组名后清空表单
+                    //console.log(group_name)
+
+                    if (group_name == "") {
+                        swal("添加失败", "用户组名不能为空", "error");
+                        return false
+                    }
+                    create_group_modal.modal("hide");  // 点击提交后隐藏
+
+                    // ajax向后台提交数据
+                    $.ajax({
+                        url: "{% url 'group_create' %}",
+                        type: "post",
+                        data: {"name": group_name},
+                        success: function (res) {
+                            if (res.status == 0) {
+                                swal({
+                                    "title": "",
+                                    "text": "用户组创建成功",
+                                    "type": "success"
+                                }, function () {
+                                    setTimeout(function () {
+                                        window.location.reload(); // 动态刷新，一个http请求
+                                    }, 100)  // 点击提交之后100毫秒之后弹出成功
+                                });
+                            } else {
+                                // console.log("操作失败") // 调试
+                                swal("操作失败", res.errmsg, "error"); // 弹窗组件
+                            }
+                        },
+                    }) //ajax结束
+                })
+            })
+        })
+    </script>
+{% endblock %}

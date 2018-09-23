@@ -1,0 +1,113 @@
+<!--代码发布-->
+
+{% extends "public/layout.html" %}
+
+{% block breadcrumb %}
+    <li><i class="fa fa-fw fa-home"></i>持续交付<span class="divider"></span></li>
+    <li><a href="{% url 'code_deploy' %}">代码发布</a><span class="divider"></span></li>
+{% endblock %}
+
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-horizontal form-border" method="post" enctype="multipart/form-data"
+                          action="{% url 'code_deploy' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">部署项目<span style="color: red;"> *</span></label>
+                            <div class="col-sm-6" id="contenttype">
+                                <select class="chosen-select chosen-transparent form-control" name="project"
+                                        id="select_contenttype" parsley-trigger="change" parsley-required="true"
+                                        parsley-error-container="#contenttype">
+                                    <option value="0">请选择要发布的项目</option>
+                                    {% for sname in servernames %}
+                                        <option value="{{ sname.id }}">{{ sname.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">代码url</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled="true" class="form-control list-group-item disabled"
+                                       name="url" value={{ url }}>
+                            </div>
+                        </div>-->
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">版本号<span> *</span></label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled="true" class="form-control list-group-item disabled"
+                                       name="version" value={{ version }}>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">部署环境<span style="color: red;"> *</span></label>
+                            <div class="col-sm-6">
+                                <label class="radio-inline">
+                                    <input class="icheck" type="radio" checked="" name="env" value="beta">测试</label>
+                                <label class="radio-inline">
+                                    <input class="icheck" type="radio" name="env" value="ga">正式</label>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="select_category" class="col-sm-3 control-label">发布主机<span
+                                    style="color: red;"> *</span></label>
+
+                            <div class="col-sm-6" id="op_interface">
+                                <select class="chosen-select chosen-transparent form-control" data-placeholder=""
+                                        multiple="选择联系人"
+                                        name="op_interface" id="select_dev_interface" parsley-trigger="change"
+                                        parsley-required="true" parsley-error-container="#op_interface">
+                                    {% for server in serverlists %}
+                                        <option value="{{ server.hostname }}">{{ server.hostname }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">返回结果<span> *</span></label>
+                            <div class="col-sm-6">
+                                <textarea class="form-control">{{ ret }}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group form-footer">
+                            <div class="col-sm-offset-5 col-sm-3">
+                                <button type="submit" class="btn btn-primary" id="submit-action">部署</button>
+                                <button type="reset" class="btn btn-default ">重置</button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        $(function () {
+            $("#submit-action").on("click",function(){
+                var selected = [];
+                $("#select_dev_interface option:selected").each(function () {
+                    selected.push($(this).val());
+                });
+                console.log(selected);
+                $("#select_dev_interface").val(selected);
+            })
+            $(".chosen-select").chosen({disable_search_threshold: 8});
+        })
+    </script>
+{% endblock %}

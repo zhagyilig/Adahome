@@ -1,0 +1,107 @@
+{% extends "public/layout.html" %}
+
+{% block breadcrumb %}
+    <li><i class="fa fa-fw fa-home"></i><a href="#">资产管理</a><span class="divider"></span></li>
+    <li><a href="{% url "group_list" %}">IDC列表</a><span class="divider"></span></li>
+{% endblock %}
+
+{% block body %}
+
+    <div class="ibox float-e-margins table-bordered">
+        <div class="ibox-content">
+            <div>
+                <caption>
+                    <a href="{% url 'add_idc' %}" class="btn btn-primary btn-sm">添加IDC</a>
+                    <a href="#" class="btn btn-danger btn-sm">删除所选</a>
+                </caption>
+
+                <form id="search_form" method="get" action="" class="pull-right mail-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" id="search_input" name="keyword"
+                               placeholder="Search">
+                        <div class="input-group-btn">
+                            <button id="search_btn" type="submit" class="btn btn-sm btn-primary">
+                                -搜索-
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <table class="table table-striped table-hover table-bordered">
+                <tr>
+                    <th class="text-center">
+                        <input type="checkbox" id="check_all" onclick="checkAll('check_all', 'checked')">
+                    </th>
+                    <!--<th>序号</th>-->
+                    <th>简称</th>
+                    <th>IDC名称</th>
+                    <th>详细地址</th>
+                    <th>联系人</th>
+                    <th>联系电话</th>
+                    <th>邮件</th>
+                    <th>服务数量</th>
+                    <th>操作</th>
+                </tr>
+                {% for idc_list in object_list %}
+                    <tr class="gradex">
+                        <td class="text-center">
+                            <input type="checkbox" name="checked" value="5000">
+                        </td>
+                        <!--<td>{{ forloop.counter }}</td> --> <!-- 显示序号 -->
+                        <td><a href="#">{{ idc_list.name }}</a></td>
+                        <td>{{ idc_list.idc_name }}</td>
+                        <td>{{ idc_list.address }}</td>
+                        <td>{{ idc_list.username }}</td>
+                        <td>{{ idc_list.phone }}</td>
+                        <td>{{ idc_list.email }}</td>
+                        <td>85</td>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-xs" href="#">主机列表</a>
+                            <a type="button" class="btn btn-warning btn-xs" href="#">编辑</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div>  <!--页码操作开始-1-->
+            <center> <!--居中显示开始-1-->
+                <ul class="pagination">
+                    <li><a href="{% url 'idc_list' %}?page=1">首页</a></li>  <!--首页-->
+
+                    {% if page_obj.has_previous %}  <!--如果有上一页，显示上一页按钮-->
+                        <Li><a href="{% url 'idc_list' %}?page={{ page_obj.previous_page_number }}"
+                               aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><a aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span></a>
+                        </li>
+                    {% endif %}
+
+                    {% for p in page_obj.paginator.page_range %}  <!--页码的范围-->
+                        {% if p == page_obj.number %}  <!--当前页的序号突出显示-->
+                            <li class="active"><a href="{% url 'idc_list' %}?page={{ p }}">{{ p }}</a></li>
+                        {% else %}
+                            <li><a href="{% url 'idc_list' %}?page={{ p }}">{{ p }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %} <!--如果有下一页，显示下一页按钮-->
+                        <li><a href="{% url 'idc_list' %}?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><a aria-label="Previous">
+                            <span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    {% endif %}
+
+                    <li><a href="{% url 'idc_list' %}?page={{ page_obj.paginator.num_pages }}">末页</a></li> <!--尾页-->
+                </ul>
+            </center><!--居中显示结束-1-->
+        </div><!--页码操作结束-1-->
+    </div>
+{% endblock %}

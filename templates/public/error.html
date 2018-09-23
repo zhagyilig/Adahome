@@ -1,0 +1,38 @@
+{% extends "public/layout.html" %}
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block css %}
+    <style>
+        #page-wrapper {
+            margin: 0px;
+        }
+
+        #content-header {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+    <h1><p class="text-center">操作失败</p></h1>
+    <h3><p class="text-center" style="color: red">{{ errmsg }}</p></h3>
+    <h4><p class="text-center">自动跳转······</p></h4>
+{% endblock %}
+
+{% block js %}
+    <script>
+        var next_url = "{{ next_url }}";
+        if (next_url == "") {
+            next_url = "/"
+        }
+        $(function () {
+            setTimeout(function () {
+                window.location.href = next_url;
+            }, 4000)
+        })
+    </script>
+{% endblock %}

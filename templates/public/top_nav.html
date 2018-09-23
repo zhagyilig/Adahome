@@ -1,0 +1,53 @@
+<!--页面头部导航开始-1 -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <a class="navbar-brand" href="/" style="margin-left: 20px;">Adasalt</a>
+    <!--
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+    -->
+    <!--<img class="img-circle pull-right" src="/static/img/ada2.ico" alt="头像"/> -->
+    <ul class="nav navbar-nav pull-right">
+        <li class="dropdown" id="profile-messages">
+            <a title="" href="#" data-toggle="dropdown" data-target="#profile-messages" class="dropdown-toggle">
+                <i class="fa fa-user fa-fw"></i>
+                <span class="text">
+                        {% if request.user.fullname %}
+                            {{ request.user.fullname }}
+                        {% else %}
+                            {{ request.user.username }}
+                        {% endif %}
+                    </span><b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#" style="color: grey"><i class="fa fa-globe fa-spin"></i>
+                    {% if request.user.is_anonymous %}
+                        匿名用户
+                    {% elif request.user.is_superuser %}
+                        超级管理员
+                    {% else %}
+                        普通用户
+                    {% endif %}
+                </a></li>
+
+                <li><a href="#"><i class="fa fa-pencil"></i> 个人中心</a></li>
+                <li class="divider"></li>
+                <li><a href="{% url "user_logout" %}"><i class="fa fa-sign-out fa-fw"></i>Log out</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav pull-right">
+        <li>
+            <a href="/" target="_blank">
+                <i class="fa fa-cogs fa-spin"></i>欢迎使用Ada运维自动化平台
+            </a>
+        </li>
+        <!--<li><a href="#" target="_blank">zabbix</a></li>-->
+        <!-- <li><a href="{% url 'user_logout' %}"><i class="fa fa-sign-out fa-fw"></i><span>Log out</span></a></li> -->
+    </ul>
+
+    <!--<form class="navbar-form">
+          <input type="text" class="form-control" placeholder="Search...">
+    </form>-->
+</nav>
+<!--页面头部导航结束-1 -->
