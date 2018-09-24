@@ -11,7 +11,7 @@ from django.views.generic import TemplateView, View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.shortcuts import redirect
-from django.utils.http import urlquote_plus # url编码
+from django.utils.http import urlquote_plus  # url编码
 from influxdb import InfluxDBClient
 from monitor.forms import CreateGraphForm
 from monitor.models import Graph
@@ -35,6 +35,7 @@ class InfluxdbGraphTemView(LoginRequiredMixin, TemplateView):
     template_name = 'monitor/influxdb/influx_graph.html'
 
     def get_context_data(self, **kwargs):
+        """加载前端图形数据"""
         context = super(InfluxdbGraphTemView, self).get_context_data(**kwargs)
         try:
             client = InfluxClient()
@@ -43,12 +44,11 @@ class InfluxdbGraphTemView(LoginRequiredMixin, TemplateView):
             context['categories'] = client.categories
         except:
             pass
-
         return context
 
 
 class InfluxdbApiView(LoginRequiredMixin, View):
-    """influxdb api, 获取influxdb中的数据"""
+    """influxdb api, 获取influxdb的数据"""
 
     def get(self, request):
         ret = {}
@@ -61,7 +61,7 @@ class InfluxdbApiView(LoginRequiredMixin, View):
 
 
 class InfluxClient():
-    """influxdb相关的操作"""
+    """influxdb相关操作"""
 
     def __init__(self):
         self.client = InfluxDBClient(host=infludbcon['host'], port=infludbcon['port'],
@@ -73,16 +73,13 @@ class InfluxClient():
     def query(self):
         """查询influxdb中的数据"""
 
-        hostnames = ['study-zyl-node5', ]
+        hostnames = ['study-zyl-node5', 'zyl-node1', ]
+        # hostnames = ['zyl-node1', 'zyl-node2', ]
         sql = ''  # 查询sql
         for hostname in hostnames:
-            sql += '''select mean(value) as value from interface_tx \
-where time > now() - 15m and instance = 'eth0' and type = 'if_octets' \
+            sql += '''select mean(value) as value from memory_value \
+where time > now() - 15m and type_instance = 'free' and type = 'memory' \
 and host = '{}' group by time(60s) order by time desc; '''.format(hostname)
-
-        """
-        sql = "select mean(value) as value from interface_tx where time > now() - 5m and instance = 'eth0' and type = 'if_octets' and host = 'study-zyl-node5' group by time(60s) order by time desc;select mean(value) as value from interface_tx where time > now() - 5m and type_instance = 'eth0' and type = 'if_octets' and host = 'zyl-node1' group by time(60s) order by time desc;"
-        """
         logger.debug('查询influxdb的sql是：{}'.format(sql))
         try:
             result = self.client.query(sql, epoch='s')  # 返回查出的数据
@@ -92,9 +89,8 @@ and host = '{}' group by time(60s) order by time desc; '''.format(hostname)
             logger.error('查询influxdb报错：{}'.format(e.args))
 
         for index, hostname in enumerate(hostnames):
-            print(index, hostname)  # 0 study-zyl-node5
-            # self.process_data(hostname, result[index].get_points())
-            self.process_data(hostname, list(result)[index])
+            # print(index, hostname)  # 0 study-zyl-node5
+            self.process_data(hostname, list(result[index])[0])  # list(ret[1])[0]
 
     def process_data(self, hostname, data_points):
         """处理数据：
@@ -113,8 +109,8 @@ and host = '{}' group by time(60s) order by time desc; '''.format(hostname)
         if not self.categories:
             self.categories = self.process_time(categories)
 
-        # logger.debug('时间: {} '.format(categories))
-        # logger.debug('数据: {}'.format(serie))
+        logger.debug('时间: {} '.format(categories))
+        logger.debug('数据: {}'.format(serie))
 
     def process_time(self, categories):
         """处理前端显示时间"""
@@ -157,7 +153,7 @@ class CreateGraphTemView(LoginRequiredMixin, TemplateView):
         context = super(CreateGraphTemView, self).get_context_data(**kwargs)
         try:
             client = InfluxClient()
-            context['measurements'] =client.measurements
+            context['measurements'] = client.measurements
         except Exception as e:
             logger.error('获取influx中的表的失败: {}'.format(e.args))
         logger.debug('获取influx中的表成功')
@@ -166,7 +162,8 @@ class CreateGraphTemView(LoginRequiredMixin, TemplateView):
     def post(self, request):
         """获取提交的数据，并验证"""
         logger.debug('创建图形: {},操作人: {}'.format(request.POST, request.user))
-        next_url = urlquote_plus(request.GET.get('next', None) if request.GET.get('next', None) else reverse('influx_graph_list'))
+        next_url = urlquote_plus(
+            request.GET.get('next', None) if request.GET.get('next', None) else reverse('influx_graph_list'))
         form = CreateGraphForm(request.POST)
         if form.is_valid():
             try:
