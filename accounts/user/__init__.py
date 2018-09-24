@@ -8,6 +8,7 @@ from django.contrib.auth.models import User, Group  # 要进行分页的数据�
 from django.contrib.auth.mixins import LoginRequiredMixin  # 登陆验证
 from django.http import HttpResponse, JsonResponse, QueryDict  # QueryDict：定义request.mode
 
+
 '''
 1. 用户列表展示
 '''

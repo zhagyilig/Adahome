@@ -32,13 +32,13 @@
             <div class="col-sm-3">
                 <div class="ibox float-e-margins table-bordered">
                     <div class="ibox-title">
-                        <span class="label label-primary pull-right">Online</span>
-                        <h5>在线用户</h5>
+                        <span class="label label-primary pull-right">Projects</span>
+                        <h5>项目总数</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><a href="/jlog/list/online/"> <span id="online_users">37</span></a></h1>
+                        <h1 class="no-margins"><a href="/jlog/list/online/"> <span id="online_users">6</span></a></h1>
 
-                        <small>Online user</small>
+                        <small>All projects</small>
                     </div>
                 </div>
             </div>
@@ -46,28 +46,30 @@
             <div class="col-sm-3">
                 <div class="ibox float-e-margins table-bordered">
                     <div class="ibox-title">
-                        <span class="label label-danger pull-right">Connected</span>
-                        <h5>已连接服务器</h5>
+                        <span class="label label-danger pull-right">Release</span>
+                        <h5>上线总数</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><a href="/jlog/list/online/"> <span id="online_hosts">26</span></a></h1>
-                        <small>Connected host</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-5">
-                <div class="ibox float-e-margins table-bordered">
-                    <div class="ibox-content">
-                        <div id="main" style="width: 400px;height:360px;"></div>
+                        <h1 class="no-margins"><a href="/jlog/list/online/"> <span id="online_hosts">260</span></a></h1>
+                        <small>All release</small>
                     </div>
                 </div>
             </div>
 
-            <div class="col-sm-5 right">
+            <!-- salt keys -->
+            <div class="col-sm-6">
                 <div class="ibox float-e-margins table-bordered">
                     <div class="ibox-content">
-                        <div id="main" style="width: 400px;height:360px;"></div>
+                        <div id="saltkeys" style="width: 500px;height:360px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 站点状态码 -->
+            <div class="col-sm-6 right">
+                <div class="ibox float-e-margins table-bordered">
+                    <div class="ibox-content">
+                        <div id="status" style="width: 400px;height:360px;"></div>
                     </div>
                 </div>
             </div>
@@ -77,36 +79,86 @@
 {% endblock %}
 
 {% block js %}
-
-
-
     <script type="text/javascript">
+        // salt keys:
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'));
+        var myChart = echarts.init(document.getElementById('saltkeys'));
 
         // 指定图表的配置项和数据
         var option = {
             title: {
-                text: 'Salt minion keys'
+                text: 'Salt minion keys',
+                left: 'center',
             },
             tooltip: {},
             legend: {
                 data: ['状态']
+            },
+            // 工具栏, 内置有导出图片，数据视图，动态类型切换，数据区域缩放，重置五个工具
+            toolbox: {
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
             },
             xAxis: {
                 data: ["接受", "拒绝", "待认证",]
             },
             yAxis: {},
             series: [{
-                name: '销量',
+                name: '主机',
                 type: 'bar',
-                data: [5, 20, 36,]
+                data: [6, 4, 1,]
             }]
         };
 
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
+    </script>
 
-
+    <script>
+        // 站点状态码：
+        var myChart = echarts.init(document.getElementById('status'));
+        option = {
+            title: {
+                text: '站点用户访问状态码',
+                x: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['200', '400', '502', '500', '403']
+            },
+            series: [
+                {
+                    name: '状态码',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: [
+                        {value: 805, name: '200'},
+                        {value: 310, name: '400'},
+                        {value: 234, name: '502'},
+                        {value: 135, name: '500'},
+                        {value: 148, name: '403'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
     </script>
 {% endblock %}

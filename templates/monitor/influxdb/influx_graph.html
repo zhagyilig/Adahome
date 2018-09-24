@@ -105,7 +105,7 @@
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                /** 前端时间处理
+                /** 前端时间处理,现在后端已经处理。
                 axisLabel: {
                     // 使用函数模板，函数参数分别为刻度数值（类目），刻度的索引
                     formatter: function (value) {
@@ -129,7 +129,7 @@
                 }
             },
 
-            // 系列列表。每个系列通过 type 决定自己的图表类型
+            // 系列列表。每个系列通过type决定自己的图表类型
             /**series: [
 
              {
@@ -155,7 +155,7 @@
              }
              ]  **/
         };
-        // 使用刚指定的配置项和数据显示图表。
+        // 使用刚指定的配置项和数据显示图表
         myChart.setOption(option);
 
         var new_option = {

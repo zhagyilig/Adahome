@@ -24,7 +24,16 @@
                 </ul>
             </li> <!--资产平台结束-->
 
-            <li><!--监控配置-->
+            <li><!--任务管理开始-->
+                <a href="#"><i class="fa fa-retweet fa-fw"></i>发布系统<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a href="{% url 'code_deploy' %}">发布</a></li>
+                    <li><a href="#">重启</a></li>
+                    <li><a href="#">回滚</a></li>
+                </ul>
+            </li> <!--任务管理结束-->
+
+            <li><!--监控配置开始-->
                 <a href="#"><i class="fa fa-desktop fa-fw"></i>监控配置<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li>
@@ -34,8 +43,17 @@
                         <a href="{% url 'influx_graph_list' %}">图形管理</a>
                     </li>
                 </ul>
-            </li> <!--监控配置-->
+            </li> <!--监控配置结束-->
 
+
+            <li><!--任务管理开始-->
+                <a href="#"><i class="fa fa-list-alt fa-fw"></i>工单管理<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a href="#">申请工单</a></li>
+                    <li><a href="#">工单列表</a></li>
+                    <li><a href="#">历史工单</a></li>
+                </ul>
+            </li> <!--任务管理结束-->
 
             {#            <li><!--任务管理开始-->#}
             {#                <a href="#"><i class="fa fa-list-ul fa-fw"></i>任务编排<span class="fa arrow"></span></a>#}
@@ -55,15 +73,6 @@
             {#                </ul>#}
             {#            </li> <!--应用管理结束-->#}
 
-            <li><!--任务管理-->
-                <a href="#"><i class="fa fa-retweet fa-fw"></i>持续交付<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a href="{% url 'code_deploy' %}">发布</a></li>
-                    <li><a href="#">重启</a></li>
-                    <li><a href="#">回滚</a></li>
-                </ul>
-            </li> <!--任务管理结束-->
-
             {#            <li><!--日志开始-->#}
             {#                <a href="#"><i class="fa fa-file fa-fw"></i>日志审计<span class="fa arrow"></span></a>#}
             {#                <ul class="nav nav-second-level collapse">#}
@@ -71,34 +80,36 @@
             {#                </ul>#}
             {#            </li> <!--日志结束-->#}
 
-            <li><!--consul管理-->
-                <a href="#"><i class="fa fa-link fa-fw"></i>Consul<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a href="#">成员</a></li>
-                    <li><a href="#">更新</a></li>
-                    {#                    <li><a href="#">备份/恢复</a></li>#}
-                    {#                    <li><a href="#">相关文档</a></li>#}
-                </ul>
-            </li> <!--consul管理结束-->
+            {#            <li><!--consul管理开始-->#}
+            {#                <a href="#"><i class="fa fa-link fa-fw"></i>Consul<span class="fa arrow"></span></a>#}
+            {#                <ul class="nav nav-second-level collapse">#}
+            {#                    <li><a href="#">成员</a></li>#}
+            {#                                        <li><a href="#">备份/恢复</a></li>#}
+            {#                                        <li><a href="#">相关文档</a></li>#}
+            {#                </ul>#}
+            {#            </li> <!--consul管理结束-->#}
 
-            <li id="juser"> <!--用户管理开始-->
-                <a href="#"><i class="fa fa-users fa-fw"></i>权限管理<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level  collapse">
-                    <li>
-                        <a href="{% url 'user_list' %}" class="menu-link">用户列表</a>
-                        <a href="{% url 'group_list' %}" class="menu-link">用户组列表<span
-                                class="label label-primary pull-right">49/49</span></a>
-                        <a href="{% url 'permission_list' %}" class="menu-link">权限列表</a>
-                    </li>
-                </ul>
-            </li> <!--用户管理结束-->
 
-            <li><!--管理配置开始-->
-                <a href="#"><i class="fa fa-cog fa-fw"></i>管理配置<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a target="_blank" href="/admin">Django administration</a></li>
-                </ul>
-            </li> <!--系统管理管理结束-->
+            {% if request.user.is_superuser %}
+                <li id="juser"> <!--用户管理开始-->
+                    <a href="#"><i class="fa fa-users fa-fw"></i>权限管理<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level  collapse">
+                        <li>
+                            <a href="{% url 'user_list' %}" class="menu-link">用户列表</a>
+                            <a href="{% url 'group_list' %}" class="menu-link">用户组列表<span
+                                    class="label label-primary pull-right">49/49</span></a>
+                            <a href="{% url 'permission_list' %}" class="menu-link">权限列表</a>
+                        </li>
+                    </ul>
+                </li> <!--用户管理结束-->
+
+                <li><!--管理配置开始-->
+                    <a href="#"><i class="fa fa-cog fa-fw"></i>管理配置<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a target="_blank" href="/admin">Django administration</a></li>
+                    </ul>
+                </li> <!--系统管理管理结束-->
+            {% endif %}
 
 
         </ul><!--菜单列表结束-->
