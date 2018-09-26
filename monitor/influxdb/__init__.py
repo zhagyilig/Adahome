@@ -73,7 +73,7 @@ class InfluxClient():
     def query(self):
         """查询influxdb中的数据"""
 
-        hostnames = ['study-zyl-node5', 'zyl-node1', ]
+        hostnames = ['study-zyl-node5', 'zyl-node1', 'zyl-node2']
         # hostnames = ['zyl-node1', 'zyl-node2', ]
         sql = ''  # 查询sql
         for hostname in hostnames:

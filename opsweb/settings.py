@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'accounts',  # 2 用户管理
     'resources',  # 3 资产管理
     'monitor',  # 4 监控告警
-    'code_update',  # 5 代码发布
+    'code_update',  # 5 发布系统
     'djcelery',
     'django_crontab',
     'workorder'  # 工单系统

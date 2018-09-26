@@ -10,7 +10,7 @@
                         <h5>用户总数</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><a href="{% url "user_list" %}">88</a></h1>
+                        <h1 class="no-margins"><a href="{% url "user_list" %}">{{ allusers }}</a></h1>
                         <small>All user</small>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                         <h5>主机总数</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><a href="/jasset/asset/list/">31</a></h1>
+                        <h1 class="no-margins"><a href="{% url 'server_list' %}">{{ allhosts }}</a></h1>
                         <small>All host</small>
                     </div>
                 </div>
@@ -36,7 +36,8 @@
                         <h5>项目总数</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><a href="/jlog/list/online/"> <span id="online_users">6</span></a></h1>
+                        <h1 class="no-margins"><a href="{% url 'product_manage' %}"> <span
+                                id="online_users">{{ allprojects }}</span></a></h1>
 
                         <small>All projects</small>
                     </div>
@@ -50,7 +51,7 @@
                         <h5>上线总数</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><a href="/jlog/list/online/"> <span id="online_hosts">260</span></a></h1>
+                        <h1 class="no-margins"><a href="#"> <span id="online_hosts">20</span></a></h1>
                         <small>All release</small>
                     </div>
                 </div>

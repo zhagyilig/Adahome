@@ -9,6 +9,8 @@ from django.utils.decorators import method_decorator  # 模版视图登陆验证
 from django.views.generic import TemplateView  # 模版视图
 from django.contrib.auth.mixins import LoginRequiredMixin  # 模版视图登陆验证
 from django.utils.http import unquote_plus  # 反解析url # 对应加密url： servers.__init__.py
+from django.contrib.auth.models import User
+from resources.models import Server, Product
 
 
 """普通函数实现
@@ -27,6 +29,15 @@ class IndexTemView(TemplateView):
 
 class IndexTemView(LoginRequiredMixin, TemplateView):  # 直接添加验证
     template_name = 'dashboard/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexTemView, self).get_context_data(**kwargs)
+        context['allusers'] = User.objects.all().count()
+        context['allhosts'] = Server.objects.all().count()
+        context['allprojects']  = Product.objects.all().count()
+        return context
+
+
 
 
 class SuccessTemView(LoginRequiredMixin, TemplateView):
