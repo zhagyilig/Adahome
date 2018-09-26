@@ -16,15 +16,32 @@
                     <form class="form-horizontal form-border" method="post" enctype="multipart/form-data"
                           action="{% url 'code_deploy' %}">
                         {% csrf_token %}
+
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">部署项目<span style="color: red;"> *</span></label>
+                            <label class="col-sm-3 control-label">业务线<span style="color: red;"> *</span></label>
+                            <div class="col-sm-6" id="contenttype">
+                                <select class="chosen-select chosen-transparent form-control" name="product"
+                                        id="select_contenttype" parsley-trigger="change" parsley-required="true"
+                                        parsley-error-container="#contenttype">
+                                    <option value="0">选择业务线</option>
+                                    {% for pr in product %}
+                                        <option value="{{ pr.service_name }}">{{ pro.service_name }}</option>
+                                    {% endfor %}
+                                    <option value="product">detalase</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">发布项目<span style="color: red;"> *</span></label>
                             <div class="col-sm-6" id="contenttype">
                                 <select class="chosen-select chosen-transparent form-control" name="project"
                                         id="select_contenttype" parsley-trigger="change" parsley-required="true"
                                         parsley-error-container="#contenttype">
-                                    <option value="0">请选择要发布的项目</option>
-                                    {% for sname in servernames %}
-                                        <option value="{{ sname.id }}">{{ sname.name }}</option>
+                                    <option value="0">请选择项目</option>
+                                    {% for pro in project %}
+                                        <option value="{{ pro.service_name }}">{{ pro.service_name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -39,21 +56,23 @@
                             </div>
                         </div>-->
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">版本号<span> *</span></label>
-                            <div class="col-sm-6">
-                                <input type="text" disabled="true" class="form-control list-group-item disabled"
-                                       name="version" value={{ version }}>
-                            </div>
-                        </div>
+                        {#                        <div class="form-group">#}
+                        {#               <label class="col-sm-3 control-label">版本号<span> *</span></label>#}
+                        {#                            <div class="col-sm-6">#}
+                        {#          <input type="text" disabled="true" class="form-control list-group-item disabled"#}
+                        {#                                       name="version" value={{ version }}>#}
+                        {#                            </div>#}
+                        {#                        </div>#}
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">部署环境<span style="color: red;"> *</span></label>
+                            <label class="col-sm-3 control-label">发布环境<span style="color: red;"> *</span></label>
                             <div class="col-sm-6">
                                 <label class="radio-inline">
-                                    <input class="icheck" type="radio" checked="" name="env" value="beta">测试</label>
+                                    <input class="icheck" type="radio" checked="" name="env" value="ga">正式</label>
                                 <label class="radio-inline">
-                                    <input class="icheck" type="radio" name="env" value="ga">正式</label>
+                                    <input class="icheck" type="radio" disabled="true" name="env"
+                                           value="beta">测试</label>
+
                             </div>
                         </div>
 
@@ -77,14 +96,14 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">返回结果<span> *</span></label>
                             <div class="col-sm-6">
-                                <textarea class="form-control">{{ ret }}</textarea>
+                                <textarea class="form-control" style="color: red">{{ ret }}</textarea>
                             </div>
                         </div>
+
                         <div class="form-group form-footer">
                             <div class="col-sm-offset-5 col-sm-3">
                                 <button type="submit" class="btn btn-primary" id="submit-action">部署</button>
-                                <button type="reset" class="btn btn-default ">重置</button>
-
+                                <button type="reset" class="btn btn-default">重置</button>
                             </div>
                         </div>
                     </form>
@@ -98,8 +117,26 @@
 
 {% block js %}
     <script>
+        $(document).ready(function () {
+            $("#select_dev_interface").chosen({
+                width: "100%",
+                max_selected_options: 5,
+                search_contains: true,
+                allow_single_deselect: true
+            });
+        });
+
+        function getoption(val) {
+
+            var project = document.getElementById("project").value;
+            var select = document.getElementById("services");
+
+            select.options.length = 0;   // del options
+            $('#services').trigger('chosen:updated');
+        }
+
         $(function () {
-            $("#submit-action").on("click",function(){
+            $("#submit-action").on("click", function () {
                 var selected = [];
                 $("#select_dev_interface option:selected").each(function () {
                     selected.push($(this).val());
@@ -109,5 +146,6 @@
             })
             $(".chosen-select").chosen({disable_search_threshold: 8});
         })
+
     </script>
 {% endblock %}
