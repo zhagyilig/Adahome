@@ -8,7 +8,6 @@ from django.contrib.auth.models import User, Group  # 要进行分页的数据�
 from django.contrib.auth.mixins import LoginRequiredMixin  # 登陆验证
 from django.http import HttpResponse, JsonResponse, QueryDict  # QueryDict：定义request.mode
 
-
 '''
 1. 用户列表展示
 '''
@@ -132,7 +131,7 @@ class ModfiyUserStatusView(View):
 '''
 
 
-class ModfiyGroupStatusView(View):
+class ModfiyGroupStatusView(LoginRequiredMixin, View):
     def get(self, request):
         '''
         显示组名，但是如果用户已经添加到组，那该用户就不显示已经添加的组名
@@ -225,6 +224,7 @@ class ModfiyGroupStatusView(View):
 '''
 4. 业务线调用用户列表
 '''
+
 
 class GetUserView(LoginRequiredMixin, View):
     def get(self, request):

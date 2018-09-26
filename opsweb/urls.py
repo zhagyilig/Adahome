@@ -19,4 +19,6 @@ urlpatterns = [
     url(r'^resources/', include("resources.urls"), name="resources"),  # 资产管理
     url(r'^monitor/', include("monitor.urls"), name='monitor'),  # 监控告警
     url(r'^code_update/', include("code_update.urls"), name='code_update'),  # 代码部署 # 180913
+    url(r'^work_order/', include("workorder.urls"), name='workorder'),  # 工单系统 # 180924
+
 ]

@@ -7,11 +7,5 @@ from core.tasks import show
 
 # Create your views here.
 
-def celerytest(request):
-    """180923 学习celery
-    处理异步请求"""
-    ret = {'status': 'ok'}
-    # show() # 直接调用
-    show.delay()  # 异步调用
-
-    return JsonResponse(ret)
+class CodeDeployTemView(LoginRequiredMixin, TemplateView):
+    pass
