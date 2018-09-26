@@ -46,9 +46,7 @@ urlpatterns = [
 
     # 180821 权限列表
     url(r'^permission/', include([
-        url(r'^list/$', permission.PermissionListView.as_view(), name="permission_list"), # 权限列表
-        url(r'^add/$', permission.PermissionAddTemView.as_view(), name="permission_add"), # 权限列表
+        url(r'^list/$', permission.PermissionListView.as_view(), name="permission_list"),  # 权限列表
+        url(r'^add/$', permission.PermissionAddTemView.as_view(), name="permission_add"),  # 权限列表
     ])),
-
-
 ]
