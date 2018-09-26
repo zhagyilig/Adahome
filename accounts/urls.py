@@ -5,7 +5,6 @@
 from django.conf.urls import url, include
 from . import views, user, group, permission
 
-
 urlpatterns = [
     # 登陆和注销功能
     # url(r'^login/$', views.login_view, name='user_login'),  # 普通函数

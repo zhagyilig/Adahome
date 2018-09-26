@@ -8,12 +8,9 @@ from django.contrib.auth.models import User, Group  # 要进行分页的数据�
 from django.contrib.auth.mixins import LoginRequiredMixin  # 登陆验证
 from django.http import HttpResponse, JsonResponse, QueryDict  # QueryDict：定义request.mode
 
-'''
-1. 用户列表展示
-'''
-
 
 class UserListView(LoginRequiredMixin, ListView):
+    """权限列表页面添加权限按钮"""
     template_name = 'accounts/userlist.html'
     model = User
     paginate_by = 10  # 定义分页，没个page显示和数据条目
@@ -22,10 +19,7 @@ class UserListView(LoginRequiredMixin, ListView):
     after_range_num = 5
 
     def get_queryset(self):
-        '''
-        用户列表，但不展示超级管理员
-        :return:
-        '''
+        """用户列表，但不展示超级管理员"""
         queryset = super(UserListView, self).get_queryset()  # queryset是一个集合，或者说是列表；
         # queryset = queryset.all().filter(username='zhangyiling') # 只显示 zhangyiling 这个账户
         # queryset = queryset.all().exclude(username='zhangyiling') # 不显示 zhangyiling 这个账户
@@ -104,12 +98,9 @@ class UserListView(LoginRequiredMixin, ListView):
         return range(start, end + 1)
 
 
-'''
-2. 修改用户状态
-'''
-
-
 class ModfiyUserStatusView(View):
+    """修改用户状态"""
+
     def post(self, request):
         # print(request.POST)
         result = {"status": 0}
@@ -126,18 +117,11 @@ class ModfiyUserStatusView(View):
         return JsonResponse(result, safe=True)  # safe模式就是True
 
 
-'''
-3. 添加用户到指定组
-'''
-
-
 class ModfiyGroupStatusView(LoginRequiredMixin, View):
+    """添加用户到指定组"""
+
     def get(self, request):
-        '''
-        显示组名，但是如果用户已经添加到组，那该用户就不显示已经添加的组名
-        :param request:
-        :return:
-        '''
+        """显示组名，但是如果用户已经添加到组，那该用户就不显示已经添加的组名"""
         # groups = Group.objects.all()
         '''
         print(groups)
@@ -161,11 +145,7 @@ class ModfiyGroupStatusView(LoginRequiredMixin, View):
         return JsonResponse(list(group_objs.values("id", "name")), safe=False)  # 传列表
 
     def put(self, request):
-        '''
-        将用户添加到指定的组
-        :param request:
-        :return:
-        '''
+        """将用户添加到指定的组"""
         result = {"status": 0}
         data = QueryDict(request.body)  # django 中只封装了get和post，如果是需要put，就得使用这用这方式
         '''
@@ -193,11 +173,7 @@ class ModfiyGroupStatusView(LoginRequiredMixin, View):
         return JsonResponse(result, safe=True)
 
     def delete(self, request):
-        '''
-        将用户从组中移除
-        :param request:
-        :return:
-        '''
+        """将用户从组中移除"""
         result = {"status": 0}
         data = QueryDict(request.body)  # django 中只封装了get和post，如果是需要put，就得使用这用这方式
 
@@ -221,12 +197,9 @@ class ModfiyGroupStatusView(LoginRequiredMixin, View):
         return JsonResponse(result, safe=True)
 
 
-'''
-4. 业务线调用用户列表
-'''
-
-
 class GetUserView(LoginRequiredMixin, View):
+    """业务线调用用户列表"""
+
     def get(self, request):
         users = User.objects.values('id', 'email', 'username')
         return JsonResponse(list(users), safe=False)

@@ -16,7 +16,6 @@ SALT_API = {
 
 
 class SaltApi(object):
-
     def __init__(self):
         self.__user = SALT_API["user"]
         self.__passwd = SALT_API["password"]
@@ -132,41 +131,44 @@ class SaltApi(object):
         r = self.__post(json=params)
         return r[1]['return'][0]
 
-   # def target_deploy(self,tgt,arg):
-   #      ''' Based on the node group forms deployment '''
-   #      params = {'client': 'local_async', 'tgt': tgt, 'fun': 'state.sls', 'arg': arg, 'expr_form': 'nodegroup'}
-   #      obj = urllib.urlencode(params)
-   #      self.token_id()
-   #      content = self.postRequest(obj)
-   #      jid = content['return'][0]['jid']
-   #      return jid
+    """
+    def target_deploy(self,tgt,arg):
+        ''' Based on the node group forms deployment '''
+        params = {'client': 'local_async', 'tgt': tgt, 'fun': 'state.sls', 'arg': arg, 'expr_form': 'nodegroup'}
+        obj = urllib.urlencode(params)
+        self.token_id()
+        content = self.postRequest(obj)
+        jid = content['return'][0]['jid']
+        return jid    
+    """
+
 
 if __name__ == '__main__':
-    # os_info = {
-    #     'client': 'local',
-    #     'fun': 'grains.item',
-    #     'tgt': '*',
-    #     'arg': ('os', 'fqdn', 'host','ipv4','osfinger','mem_total','num_cpus','osrelease'),
-    #     'kwargs': {},
-    #     'expr_form': 'glob',
-    #     'timeout': 60
-    # }
-
-    # salt使用样例:
-    # obj = SaltApi()
-    # ret = obj.list_all_keys()
-    # ret = obj.accept_key('windows-test')
-    # ret = obj.delete_key('windows-test')
-    # ret = obj.lookup_jid_ret('20180612111505161780')
-    # ret = obj.salt_running_jobs()
-    # ret = obj.remote_execution('*', 'grains.item',('ip4_interfaces'))['study-zyl-node5']['ip4_interfaces']['eth0']
-    # ret = obj.async_remote_execution('*', 'grains.item', ('os', 'id'))
-    # ret =  obj.salt_state("*",'')
-    # ret = obj.salt_alive('*', 'glob')
-    # ret = obj.run(os_info)
-    # ret = obj.get_token()
-
-    # print(json.dumps(ret))
-    # print(ret)
     pass
+    """
+    os_info = {
+        'client': 'local',
+        'fun': 'grains.item',
+        'tgt': '*',
+        'arg': ('os', 'fqdn', 'host','ipv4','osfinger','mem_total','num_cpus','osrelease'),
+        'kwargs': {},
+        'expr_form': 'glob',
+        'timeout': 60
+    }
 
+    salt使用样例:
+    obj = SaltApi()
+    ret = obj.list_all_keys()
+    ret = obj.accept_key('windows-test')
+    ret = obj.delete_key('windows-test')
+    ret = obj.lookup_jid_ret('20180612111505161780')
+    ret = obj.salt_running_jobs()
+    ret = obj.remote_execution('*', 'grains.item',('ip4_interfaces'))['study-zyl-node5']['ip4_interfaces']['eth0']
+    ret = obj.async_remote_execution('*', 'grains.item', ('os', 'id'))
+    ret =  obj.salt_state("*",'')
+    ret = obj.salt_alive('*', 'glob')
+    ret = obj.run(os_info)
+    ret = obj.get_token()
+
+    print(json.dumps(ret))
+    print(ret)"""
