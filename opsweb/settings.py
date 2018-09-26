@@ -208,7 +208,7 @@ CELERY_IMPORTS = ('core.tasks')
 ## 180922 Djando_crontab
 # https://github.com/kraiz/django-crontab
 CRONJOBS = (
-    #('*/1 * * * *', 'core.crons.test_django_crontab', '>>/tmp/django_cron.log'),
+    # ('*/1 * * * *', 'core.crons.test_django_crontab', '>>/tmp/django_cron.log'),
     ('*/1 * * * *', 'core.crons.test_django_crontab'),
 )
 

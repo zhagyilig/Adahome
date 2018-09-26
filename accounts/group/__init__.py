@@ -7,30 +7,20 @@ from django.views.generic import ListView, View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin  # 登陆验证
 from django.http import JsonResponse, HttpResponse, Http404
 
-'''
-1. 展示用户组列表
-'''
-
 
 class GroupListView(LoginRequiredMixin, ListView):
+    """展示用户组列表"""
     template_name = "accounts/grouplist.html"
     model = Group
     paginate_by = 10
     ordering = 'id'
 
 
-'''
-2. 创建用户组
-'''
-
-
 class GroupCreateView(View):
+    """展示用户组列表"""
+
     def post(self, request):
-        '''
-        创建用户组
-        :param request:
-        :return:
-        '''
+        """创建用户组"""
         result = {'status': 0}
         group_name = request.POST.get("name", "")  # ajax请求的带的参数: name
         if not group_name:
@@ -48,23 +38,17 @@ class GroupCreateView(View):
         return JsonResponse(result, safe=True)
 
 
-'''
-3. 展示指定用户组下成员列表
-'''
-
-
 class GroupUserView(LoginRequiredMixin, TemplateView):
+    """展示指定用户组下成员列表"""
     template_name = 'accounts/group_userlist.html'
     per = 10  # 每页显示条目数
 
     def get_context_data(self, **kwargs):
-        '''
+        """
         获取模版传入的数据，这是固定的写法，需要记住
         这是内置的函数功能: 就是往模版里面传变量
         利用 Paginator, Page 进行分页
-        :param kwargs:
-        :return:
-        '''
+        """
         # 将指定用户组内的成员列表取出来，然后传给模版
         context = super(GroupUserView, self).get_context_data(**kwargs)
         gid = self.request.GET.get('gid', '')  # url 传来的gid 100
@@ -80,22 +64,16 @@ class GroupUserView(LoginRequiredMixin, TemplateView):
         return context
 
 
-'''
-4. 组成员列表分页
-'''
-
-
 class GroupMemListView(LoginRequiredMixin, TemplateView):
+    """展示指定用户组下成员列表"""
     template_name = 'accounts/group_userlist.html'
     per = 2  # 每页显示条目数
 
     def get_context_data(self, **kwargs):
-        '''
+        """
         这是内置的函数功能: 就是往模版里面传变量
         利用 Paginator, Page 进行分页
-        :param kwargs:
-        :return:
-        '''
+        """
         context = super(GroupMemListView, self).get_context_data(**kwargs)
         try:
             page_num = int(self.request.GET.get("page", 1))
