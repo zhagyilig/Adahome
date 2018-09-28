@@ -202,56 +202,61 @@ class RefreshLiveView(LoginRequiredMixin, ListView):
             'arg': ('osfinger', 'fqdn', 'host', 'ipv4', 'mem_total', 'num_cpus', 'uuid'),
             'kwargs': {},
             'expr_form': 'glob',
-            'timeout': 60
+            'timeout': 300,
         }
 
         # 所有的minion key
-        all_key = self.obj.list_all_keys()  # tuple
-        # print('all_key: ', all_key)
+        all_key = self.obj.list_all_keys()  # tuple: (['study-zyl-node5'], [])
+        logger.debug('所有的minion列表: {}'.format(all_key))
 
         # minion的系统详细信息
-        for minion in all_key:
+        for host in all_key:
+            logger.debug('要循环的minion: {}'.format(host))
             info = self.obj.run(os_info)
-
-        # 获取eth0网卡地址(ipv4):
-        ipv4 = self.obj.remote_execution('*', 'grains.item', ('ip4_interfaces'))['study-zyl-node5']['ip4_interfaces'][
-            'eth0']
-
-        # 数据库主机信息过滤条件
-        uu_id = info['study-zyl-node5']['uuid']
-        print('uuid:', uu_id)
-
-        # 要入库的系统数据
-        data = {}
-        data['hostname'] = info['study-zyl-node5']['host']
-        # data['inner_ip'] = ipv4
-        data['inner_ip'] = '172.16.18.130'
-        data['server_cpu'] = info['study-zyl-node5']['num_cpus']
-        data['server_mem'] = float('%.2f' % (info['study-zyl-node5']['mem_total'] / 1024))
-        data['uuid'] = info['study-zyl-node5']['uuid']
-        data['os'] = info['study-zyl-node5']['osfinger']
-        data['check_update_time'] = datetime.datetime.now()
-
-        # salt minion在线依据; minion的运行状态
-        status = self.obj.salt_alive('study-zyl-node5', 'glob')  # True/False
-        data['status'] = status['study-zyl-node5']
-
-        # print('data:', data)
-        try:
-            logger.debug('开始主机[{}]入库操作, 操作人: {}......'.format(uu_id, request.user))
-
-            # 如果有主机uuid信息, 则更新主机信息
-            Server.objects.get(uuid__exact=uu_id)
-            Server.objects.filter(uuid=uu_id).update(**data)  # 一条记录全部更新
-            logger.debug('更新主机完成: {}'.format(uu_id))
-        except Server.DoesNotExist:
-            # 如果没有过滤到uuid信息，则是新主机入库
-            logger.debug('新入库主机: {}'.format(uu_id))
-            s = Server(**data)
             try:
-                s.save()
-            except Exception as e:
-                logger.error('主机入库失败, 报错信息: {}'.format(e.args))
-                return redirect('error', next='server_list', msg=e.args)
+                minion = host[0]
+            except IndexError as e:
+                logger.error('all_key有None, 具体的异常: {}'.format(e.args))
+                continue
+
+            # 获取eth0网卡地址(ipv4):
+            ipv4 = self.obj.remote_execution('*', 'grains.item', ('ip4_interfaces'))[minion]['ip4_interfaces']['eth0']
+            print('ipv4: {}'.format(ipv4))
+
+            # 数据库主机信息过滤条件
+            uu_id = info[minion]['uuid']
+            # print('uuid:', uu_id)
+
+            # 要入库的系统数据
+            data = {}
+            data['hostname'] = info[minion]['host']
+            data['inner_ip'] = ipv4[0]
+            data['server_cpu'] = info[minion]['num_cpus']
+            data['server_mem'] = float('%.2f' % (info[minion]['mem_total'] / 1024))
+            data['uuid'] = info[minion]['uuid']
+            data['os'] = info[minion]['osfinger']
+            data['check_update_time'] = datetime.datetime.now()
+
+            # salt minion在线依据,minion的运行状态
+            status = self.obj.salt_alive(minion, 'glob')  # True/False
+            data['status'] = status[minion]
+            # print('data:', data)
+
+            try:
+                logger.debug('开始主机[{}]入库操作, 操作人: {}......'.format(uu_id, request.user))
+
+                # 如果有主机uuid信息, 则更新主机信息
+                Server.objects.get(uuid__exact=uu_id)
+                Server.objects.filter(uuid=uu_id).update(**data)  # 一条记录全部更新
+                logger.debug('更新主机完成: {}'.format(uu_id))
+            except Server.DoesNotExist:
+                # 如果没有过滤到uuid信息，则是新主机入库
+                logger.debug('新入库主机: {}'.format(uu_id))
+                s = Server(**data)
+                try:
+                    s.save()
+                except Exception as e:
+                    logger.error('主机入库失败, 报错信息: {}'.format(e.args))
+                    return redirect('error', next='server_list', msg=e.args)
 
         return redirect('success', next='server_list')

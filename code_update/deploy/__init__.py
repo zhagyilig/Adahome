@@ -51,9 +51,15 @@ class CodeDeployTemView(LoginRequiredMixin, TemplateView):
         # ver = request.POST.get('version', None)
         env = request.POST.get('env', None)  # 部署的环境
         ser = request.POST.get('op_interface', None)  # 部署的主机
-        if pro and ser is None:
-            logger.error('部署失败，提交表单不能为空')
-            return redirect("error", next="code_deploy", msg="提交表单不能为空，请填写完整")
+        if prd is None:
+            logger.error('部署失败，提交业务线表单不能为空')
+            return redirect("error", next="code_deploy", msg="提交业务线表单不能为空，请填写完整")
+        elif pro is None:
+            logger.error('部署失败，提交项目表单不能为空')
+            return redirect("error", next="code_deploy", msg="提交项目表单不能为空，请填写完整")
+        elif ser is None:
+            logger.error('部署失败，提交部署主机不能为空')
+            return redirect("error", next="code_deploy", msg="提交部署主机不能为空，请填写完整")
         logging.debug('获取前端提交的上线项目: {}, 主机: {}; 环境:{} ; 操作人:{}'.format(pro, ser, env, user))
 
         obj = SaltApi()

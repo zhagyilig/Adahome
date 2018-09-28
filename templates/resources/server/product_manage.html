@@ -82,19 +82,6 @@
                 <a href="{% url 'product_add' %}" class="btn btn-primary btn-sm">增加业务线</a>
                 <a href="{% url 'code_deploy' %}" class="btn btn-danger btn-sm ">代码发布</a>
             </caption>
-
-            <!--
-            <form id="search_form" method="get" action="" class="pull-left mail-search">
-                <div class="input-group">
-                    <input type="text" class="form-control input-sm" id="search_input" name="keyword"
-                           placeholder="Search">
-                    <div class="input-group-btn">
-                        <button id="search_btn" type="submit" class="btn btn-sm btn-primary">
-                            -搜索-
-                        </button>
-                    </div>
-                </div>
-            </form> -->
         </div>
 
         <div class="col-xs-3">
@@ -117,7 +104,7 @@
                 <div id="modify">
                     <form class="form-horizontal" role="form" parsley-validate id="basicvalidations" method="post">
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">分类名<span
+                            <label for="name" class="col-sm-3 control-label">分类名<span
                                     style="color: red"> *</span></label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" name="service_name" autocomplete="off"
@@ -126,17 +113,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">上级分类<span
+                            <label for="name" class="col-sm-3 control-label">上级分类<span
                                     style="color: red"> *</span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" readonly autocomplete="off" id="input_pid"
-                                       parsley-trigger="change" parsley-required="true" parsley-minlength="2"
-                                       parsley-validation-minlength="1">
+                                <input type="text" class="form-control" readonly autocomplete="off" id="input_pid">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">字母简称<span
+                            <label for="name" class="col-sm-3 control-label">字母简称<span
                                     style="color: red"> *</span></label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" name="module_letter" autocomplete="off"
@@ -145,7 +130,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">业务负责人<span
+                            <label for="name" class="col-sm-3 control-label">业务负责人<span
                                     style="color: red"> *</span></label>
                             <div class="col-sm-8">
                                 <select data-placeholder="" multiple="选择联系人" tabindex="3" name="dev_interface"
@@ -154,7 +139,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="input_op_interface" class="col-sm-2 control-label">运维负责人<span
+                            <label for="input_op_interface" class="col-sm-3 control-label">运维负责人<span
                                     style="color: red"> *</span></label>
                             <div class="col-sm-8">
                                 <select data-placeholder="" multiple="选择联系人" tabindex="3" name="op_interface"
@@ -164,7 +149,7 @@
                             </div>
                         </div>
                         <div class="form-group form-footer">
-                            <div class="col-sm-offset-4 col-sm-8">
+                            <div class="col-sm-offset-5 col-sm-9">
                                 <button type="submit" id="submit_modify" class="btn btn-primary btn-sm">提交</button>
                                 <button id="return_info" class="btn btn-default btn-sm">返回</button>
                             </div>
