@@ -1,9 +1,8 @@
-Ada
+Ada运维管理平台
 ===
 [![Python Version](https://img.shields.io/badge/Python--3.6-paasing-green.svg)](https://img.shields.io/badge/Python--3.6-paasing-green.svg)
 [![Django Version](https://img.shields.io/badge/Django--1.11.0-paasing-green.svg)](https://img.shields.io/badge/Django--1.11.0-paasing-green.svg)
 
-Ada运维管理平台
 
 - 写在前言：
   - 本人某电商一名小小的运维开发工程师，喜欢交友，热爱技术 :)
