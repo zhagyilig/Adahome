@@ -157,18 +157,21 @@ if __name__ == '__main__':
     }
 
     salt使用样例:
+    """
     obj = SaltApi()
-    ret = obj.list_all_keys()
-    ret = obj.accept_key('windows-test')
-    ret = obj.delete_key('windows-test')
-    ret = obj.lookup_jid_ret('20180612111505161780')
-    ret = obj.salt_running_jobs()
-    ret = obj.remote_execution('*', 'grains.item',('ip4_interfaces'))['study-zyl-node5']['ip4_interfaces']['eth0']
-    ret = obj.async_remote_execution('*', 'grains.item', ('os', 'id'))
-    ret =  obj.salt_state("*",'')
-    ret = obj.salt_alive('*', 'glob')
-    ret = obj.run(os_info)
-    ret = obj.get_token()
+    # ret = obj.list_all_keys()
+    # ret = obj.accept_key('windows-test')
+    # ret = obj.delete_key('windows-test')
+    # ret = obj.lookup_jid_ret('20180612111505161780')
+    # ret = obj.salt_running_jobs()
+    # ret = obj.remote_execution('*', 'grains.item',('ip4_interfaces'))['study-zyl-node5']['ip4_interfaces']['eth0']
 
-    print(json.dumps(ret))
-    print(ret)"""
+    ret = obj.async_remote_execution('*', 'grains.item', ('os', 'id'))
+    # ret =  obj.salt_state("*",'')
+    # ret = obj.salt_alive('*', 'glob')
+    # ret = obj.run(os_info)
+    # ret = obj.get_token()
+    #
+    # print(json.dumps(ret))
+
+    print(ret)

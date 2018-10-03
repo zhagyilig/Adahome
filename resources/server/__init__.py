@@ -63,7 +63,7 @@ class ServerInfoListView(LoginRequiredMixin, ListView):
         ret = {}
         for obj in Product.objects.all():
             ret[obj.id] = obj.service_name
-        print(ret)
+        #print(ret)
         return ret
 
     # 下面两个函数是定义分页功能
@@ -144,7 +144,7 @@ class ServerModifyProductTemView(LoginRequiredMixin, TemplateView):
         /resources/server/list/?page=6
         /dashboard/success/server_list/
         /dashboard/success/%252Fresources%252Fserver%252Flist%252F%253Fpage%253D6/
-        如果要是实现跳转： 将server_list 改成 /resources/server/list/?page=6    
+        如果要是实现跳转： 将server_list 改成 /resources/server/list/?page=6
         '''
         return super(ServerModifyProductTemView, self).get(request, *args, **kwargs)
 
@@ -199,7 +199,7 @@ class RefreshLiveView(LoginRequiredMixin, ListView):
             'client': 'local',
             'fun': 'grains.item',
             'tgt': '*',
-            'arg': ('osfinger', 'fqdn', 'host', 'ipv4', 'mem_total', 'num_cpus', 'uuid'),
+            'arg': ('osfinger', 'fqdn', 'nodename', 'ipv4', 'mem_total', 'num_cpus', 'uuid'),
             'kwargs': {},
             'expr_form': 'glob',
             'timeout': 300,
@@ -209,29 +209,30 @@ class RefreshLiveView(LoginRequiredMixin, ListView):
         all_key = self.obj.list_all_keys()  # tuple: (['study-zyl-node5'], [])
         logger.debug('所有的minion列表: {}'.format(all_key))
 
-        # minion的系统详细信息
-        for host in all_key:
-            logger.debug('要循环的minion: {}'.format(host))
-            info = self.obj.run(os_info)
-            try:
-                minion = host[0]
-            except IndexError as e:
-                logger.error('all_key有None, 具体的异常: {}'.format(e.args))
-                continue
+        minions = list(all_key)
+        dele = minions.remove([])
+        logger.debug('要循环的minion,去除空"[]": {}'.format(minions))
 
-            # 获取eth0网卡地址(ipv4):
-            ipv4 = self.obj.remote_execution('*', 'grains.item', ('ip4_interfaces'))[minion]['ip4_interfaces']['eth0']
-            print('ipv4: {}'.format(ipv4))
+        # minion的系统详细信息
+        for minion in minions[0]:
+            info = self.obj.run(os_info)
+
+            # 获取eth0网卡地址(ipv4)，这里的eth0写死了
+            ipv4 = self.obj.remote_execution(minion, 'grains.item', ('ip4_interfaces'))[minion]['ip4_interfaces']['eth0']
+
+            # 获取磁盘总空间
+            disk = self.obj.remote_execution(minion, 'ps.disk_usage', '/')[minion]['total']
 
             # 数据库主机信息过滤条件
             uu_id = info[minion]['uuid']
             # print('uuid:', uu_id)
 
-            # 要入库的系统数据
+            # 入库的系统数据
             data = {}
-            data['hostname'] = info[minion]['host']
+            data['hostname'] = info[minion]['nodename']
             data['inner_ip'] = ipv4[0]
             data['server_cpu'] = info[minion]['num_cpus']
+            data['server_disk'] = float('%.2f' % (disk  / 1024 / 1024 / 1024))
             data['server_mem'] = float('%.2f' % (info[minion]['mem_total'] / 1024))
             data['uuid'] = info[minion]['uuid']
             data['os'] = info[minion]['osfinger']
@@ -240,11 +241,9 @@ class RefreshLiveView(LoginRequiredMixin, ListView):
             # salt minion在线依据,minion的运行状态
             status = self.obj.salt_alive(minion, 'glob')  # True/False
             data['status'] = status[minion]
-            # print('data:', data)
 
             try:
-                logger.debug('开始主机[{}]入库操作, 操作人: {}......'.format(uu_id, request.user))
-
+                logger.debug('开始主机[{}]入库操作, 操作人: {}'.format(uu_id, request.user))
                 # 如果有主机uuid信息, 则更新主机信息
                 Server.objects.get(uuid__exact=uu_id)
                 Server.objects.filter(uuid=uu_id).update(**data)  # 一条记录全部更新
@@ -258,5 +257,4 @@ class RefreshLiveView(LoginRequiredMixin, ListView):
                 except Exception as e:
                     logger.error('主机入库失败, 报错信息: {}'.format(e.args))
                     return redirect('error', next='server_list', msg=e.args)
-
         return redirect('success', next='server_list')

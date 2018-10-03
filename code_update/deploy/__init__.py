@@ -17,8 +17,17 @@ from django.template import RequestContext
 from code_update.models import ServicesName
 from resources.models import Server, Product
 from core.saltapi import SaltApi
+from core.mysql import DB_Operate
 
 logger = logging.getLogger(__name__)
+
+# salt return
+RETURNS_MYSQL = {"host": "172.16.18.88",
+                 "port": 9036,
+                 "database": "salt",
+                 "user": "zyl",
+                 "password": "888888",
+                 }
 
 
 class CodeDeployTemView(LoginRequiredMixin, TemplateView):
@@ -32,9 +41,10 @@ class CodeDeployTemView(LoginRequiredMixin, TemplateView):
         """加载所有的项目及服务列表"""
         context = super(CodeDeployTemView, self).get_context_data(**kwargs)
         # context['servernames'] = ServicesName.objects.all()  # 项目名列表
-        context['product'] = Product.objects.filter(service_name__icontains='detalase')  # 业务线，暂时写死了
+        # context['product'] = Product.objects.filter(service_name__icontains='detalase')  # 业务线，暂时写死了
+        context['product'] = Product.objects.filter(pid=0)  # 业务线，暂时写死了
         context['project'] = Product.objects.all().exclude(pid=0)  # 部署项目
-        context['serverlists'] = Server.objects.all()  # 服务器列表
+        context['serverlists'] = Server.objects.filter(hostname__icontains='node')  # 服务器列表
 
         logging.debug('加载所有的项目成功: {}'.format(context))
         return context
@@ -64,29 +74,38 @@ class CodeDeployTemView(LoginRequiredMixin, TemplateView):
 
         obj = SaltApi()
         ret = obj.list_all_keys()
-        # print('sapi: {}'.format(obj))
-        return JsonResponse({'project': pro, 'env': env, 'ret': ret, 'server': ser, 'test': prd + '.' + pro})
 
+        # return JsonResponse({'project': pro, 'env': env, 'ret': ret, 'server': ser, 'test': prd + '.' + pro})
+        #
+        # if env == 'ga':
+        #     obj.salt_state(ser, prd + '.' + pro)
+        #     logger.debug('正在部署项目:{}'.format(pro))  # ps: salt 'ada-6' state.sls detalase.batch
         if env == 'ga':
-            obj.salt_state(ser, prd + '.' + pro)
-            logger.debug('正在部署项目:{}'.format(pro))  # ps: salt 'ada-6' state.sls detalase.batch
+            # jid = obj.async_remote_execution(ser, prd + '.' + pro)
+            # logger.debug('正在异步部署项目:{}'.format(pro))
+            try:
+                jid = obj.async_remote_execution(ser, 'grains.item', ('os', 'id'))
+                logger.debug('正在异步部署项目:{}'.format(jid))
+            except KeyError as e:
+                logger.error('部署失败, 详情: {}'.format(e.args))
+                return redirect("error", next="code_deploy", msg="部署失败,{}".format(e.args))
 
-        # 目前只是指定生产环境上线, 前端提交暂时写死了
+        # 目前只是指定生产环境发布, 前端提交暂时写死了
         # elif env == 'beta':
         #     jid = sapi.async_remote_execution('tg', 'deploy.' + pro)
-        # else:
-        #     jid = sapi.async_remote_execution('beta', 'deploy.' + pro)
 
         # 获取 jid 的返回结果
-        # time.sleep(8)
-        # db = db_operate()
-        # sql = 'select returns from salt_returns where jid=%s'
-        # ret = db.select_table(settings.RETURNS_MYSQL, sql, str(jid))  # 通过jid获取执行结果
+        time.sleep(2)
+        db = DB_Operate()
+        sql = "select * from salt_returns where jid={}".format(str(jid))
+        logger.debug('jid获取执行结果的sql: {}'.format(sql))
+        try:
+            ret = DB_Operate.select_table(self, RETURNS_MYSQL, sql)  # 通过jid获取执行结果
+            context = {'ret': ret}
+        except Exception as e:
+            return redirect("error", next="code_deploy", msg="部署失败,{}".format(e.args))
 
-        time.sleep(3)
-        # context = {'ret': '部署过程已经在后台执行，请检查服务部署情况 :)'}
-        context = {'ret': jid}
-        return render(request, 'code_update/deploy.html', context, )
+        return render(request, 'code_update/deploy.html', context)
 
         def search(self, request):
             """这是一个知识点：
