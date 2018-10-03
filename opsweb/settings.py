@@ -138,7 +138,6 @@ USE_L10N = True
 USE_TZ = True
 
 #################### 自定义配置: 必须大写 ####################
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATIC_URL = '/static/'
@@ -226,3 +225,8 @@ CRONJOBS = (
 ## Redis
 # REDSI_KWARGS_LPUSH = {"host": '172.16.18.88', 'port': 6379, 'db': 3}
 # REDSI_LPUSH_POOL = None
+
+try:
+    from settings_local import *
+except ImportError:
+    pass
