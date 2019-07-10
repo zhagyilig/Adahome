@@ -1,7 +1,6 @@
 # coding=utf-8
 # auth: zhangyiling
 
-
 from django.views.generic import ListView  # 内置的列表(分页)功能
 from django.views.generic import View
 from django.contrib.auth.models import User, Group  # 要进行分页的数据库表（models）
@@ -118,10 +117,10 @@ class ModfiyUserStatusView(View):
 
 
 class ModfiyGroupStatusView(LoginRequiredMixin, View):
-    """添加用户到指定组"""
+    """添加用户到指定组."""
 
     def get(self, request):
-        """显示组名，但是如果用户已经添加到组，那该用户就不显示已经添加的组名"""
+        """显示组名，但是如果用户已经添加到组，那该用户就不显示已经添加的组名."""
         # groups = Group.objects.all()
         '''
         print(groups)
@@ -198,7 +197,7 @@ class ModfiyGroupStatusView(LoginRequiredMixin, View):
 
 
 class GetUserView(LoginRequiredMixin, View):
-    """业务线调用用户列表"""
+    """业务线调用用户列表."""
 
     def get(self, request):
         users = User.objects.values('id', 'email', 'username')

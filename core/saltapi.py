@@ -131,7 +131,7 @@ class SaltApi(object):
         r = self.__post(json=params)
         return r[1]['return'][0]
 
-    """
+
     def target_deploy(self,tgt,arg):
         ''' Based on the node group forms deployment '''
         params = {'client': 'local_async', 'tgt': tgt, 'fun': 'state.sls', 'arg': arg, 'expr_form': 'nodegroup'}
@@ -140,7 +140,7 @@ class SaltApi(object):
         content = self.postRequest(obj)
         jid = content['return'][0]['jid']
         return jid    
-    """
+
 
 
 if __name__ == '__main__':
@@ -165,8 +165,9 @@ if __name__ == '__main__':
     # ret = obj.lookup_jid_ret('20180612111505161780')
     # ret = obj.salt_running_jobs()
     # ret = obj.remote_execution('*', 'grains.item',('ip4_interfaces'))['study-zyl-node5']['ip4_interfaces']['eth0']
+    ret = obj.remote_execution('*', 'cmd.run','sudo supervisorctl status')
 
-    ret = obj.async_remote_execution('*', 'grains.item', ('os', 'id'))
+    # ret = obj.async_remote_execution('*', 'grains.item', ('os', 'id'))
     # ret =  obj.salt_state("*",'')
     # ret = obj.salt_alive('*', 'glob')
     # ret = obj.run(os_info)

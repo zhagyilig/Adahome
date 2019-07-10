@@ -12,7 +12,6 @@ from django.utils.http import unquote_plus  # 反解析url # 对应加密url： 
 from django.contrib.auth.models import User
 from resources.models import Server, Product
 
-
 """普通函数实现
 @login_required
 def index(request):
@@ -27,28 +26,24 @@ class IndexTemView(TemplateView):
         return super(IndexTemView, self).get(request, *args, **kwargs)
 """
 
+
 class IndexTemView(LoginRequiredMixin, TemplateView):  # 直接添加验证
     template_name = 'dashboard/index.html'
 
     def get_context_data(self, **kwargs):
+        """get_context_data: 展示到模版的数据."""
         context = super(IndexTemView, self).get_context_data(**kwargs)
         context['allusers'] = User.objects.all().count()
         context['allhosts'] = Server.objects.all().count()
-        context['allprojects']  = Product.objects.all().count()
+        context['allprojects'] = Product.objects.all().count()
         return context
-
-
 
 
 class SuccessTemView(LoginRequiredMixin, TemplateView):
     template_name = 'public/success.html'
 
     def get_context_data(self, **kwargs):
-        '''
-        这是内置的函数功能: 就是往模版里面传变量
-        :param kwargs:
-        :return:
-        '''
+        '''这是内置的函数功能: 就是往模版里面传变量.'''
         context = super(SuccessTemView, self).get_context_data(**kwargs)
         # print(self.kwargs)  # {'next': 'user_list'}
         # print(reverse(self.kwargs.get('next')))  # /accounts/user/list/

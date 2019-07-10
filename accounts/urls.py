@@ -20,13 +20,11 @@ urlpatterns = [
     # url(r'^user/list/$', views.UserTemView.as_view(), name="user_list"), # 模版视图，并使用函数分页功能
     # url(r'^user/list/$', user.UserListView.as_view(), name="user_list"),  # 使用django内置listview进行分页
 
-    # url学习:
     # url(r'^use/(20)/$', views.user_detail, name="user_detail"),  # 位置参数
     # url(r'^use/([0-9]+)/(?P<id>[0-9]{,4})/$', views.user_detail, name="user_detail"),  # 关键字参数
 
     # 180812 用户管理
     url(r'^user/', include([
-
         url(r'^list/$', user.UserListView.as_view(), name="user_list"),  # 类视图，用户列表
         url(r'^modify/', include([
             url(r'^status/$', user.ModfiyUserStatusView.as_view(), name="user_modify_status"),  # 改变用户状态

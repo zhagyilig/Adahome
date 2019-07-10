@@ -55,6 +55,12 @@ class AddProductTemView(LoginRequiredMixin, TemplateView):
 '''
 
 
+
+
+
+
+
+
 class ProductManageTemView(LoginRequiredMixin, TemplateView):
     template_name = 'resources/server/product_manage.html'
 

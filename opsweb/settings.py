@@ -19,11 +19,11 @@ print('------os.path.abspath: %s ' % (os.path.abspath(__file__)))
 print('------os.path.dirname: %s' % (os.path.dirname(os.path.abspath(__file__))))
 print('------BASE_DIR: %s ' % (BASE_DIR))
 
-'''
-os.path.abspath: /root/opswed/opsweb/settings.py
-os.path.dirname: /root/opswed/opsweb
-BASE_DIR: /root/opswed
-'''
+"""
+------os.path.abspath: /Users/mac/venv/Adahome/opsweb/settings.py
+------os.path.dirname: /Users/mac/venv/Adahome/opsweb
+------BASE_DIR: /Users/mac/venv/Adahome
+"""
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Ada开发步骤:
+    # Adahome开发步骤:
     'dashboard',  # 1 控制面板
     'accounts',  # 2 用户管理
     'resources',  # 3 资产管理
@@ -54,7 +54,10 @@ INSTALLED_APPS = [
     'code_update',  # 5 发布系统
     'djcelery',
     'django_crontab',
-    'workorder'  # 工单系统
+    'workorder',  # 工单系统
+    # 'xadmin',
+    # 'crispy_forms',
+
 ]
 
 MIDDLEWARE = [
@@ -94,11 +97,11 @@ WSGI_APPLICATION = 'opsweb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django',
-        'USER': 'zyl',
+        'NAME': 'adahome',
+        'USER': 'root',
         'PASSWORD': '888888',
-        'HOST': '172.16.18.88',
-        'PORT': '9036',
+        'HOST': '127.0.0.1',
+        'PORT': '3307',
         'OPTIONS': {
             "init_command": "SET foreign_key_checks = 0;",
         }
@@ -138,7 +141,6 @@ USE_L10N = True
 USE_TZ = True
 
 #################### 自定义配置: 必须大写 ####################
-# Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
@@ -227,6 +229,6 @@ CRONJOBS = (
 # REDSI_LPUSH_POOL = None
 
 try:
-    from settings_local import *
-except ImportError:
-    pass
+    from opsweb.settings_local import *
+except ImportError as e:
+    print('配置文件导入失败, Error: {}'.format(e.args))

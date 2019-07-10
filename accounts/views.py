@@ -1,7 +1,6 @@
 # coding=utf-8
 # auth: zhangyiling
 
-
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login, logout
@@ -44,17 +43,13 @@ def login_view(request):
 class LoginView(TemplateView):
     '''
     模版视图默认只定义了get方法；
-    如果是需要 post方法，那就得自己去实现, 其实就是：
+    如果是需要 post 方法，那就得自己去实现, 其实就是：
     def post(self, request): 然后将上面("使用普通函数实现登陆功能")的代码copy
     '''
     template_name = "public/login.html"  # 默认就是get方法
 
     def post(self, request):
-        '''
-        自定义post方式
-        :param request:
-        :return:
-        '''
+        '''自定义post方式.'''
         username = request.POST.get("username", "")
         userpass = request.POST.get("password", "")
         user = authenticate(username=username, password=userpass)  # 是否存在账户
@@ -92,11 +87,7 @@ class LogoutView(View):
 
 
 def user_list_view(request):
-    '''
-    普通函数实现
-    :param request:
-    :return:
-    '''
+    """普通函数实现."""
     user_queryset = User.objects.all()
     for user in user_queryset:
         # print(user.username, user.email)
@@ -149,8 +140,6 @@ class UserTemView(TemplateView):
         '''
         这是内置的函数功能: 就是往模版里面传变量
         利用 Paginator, Page 进行分页
-        :param kwargs:
-        :return:
         '''
         context = super(UserTemView, self).get_context_data(**kwargs)
         try:

@@ -1,3 +1,7 @@
+"""
+CMDB配置文件.
+"""
+
 # salt result
 RETURNS_MYSQL = {"host": "172.16.18.88",
                  "port": 9036,

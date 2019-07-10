@@ -11,8 +11,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic.base import RedirectView  # 用来进行跳转, 默认是永久重定向(301), 可以直接在urls.py中使用
 
+# import xadmin
+
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),  # django后台管理
+    # url(r'^xadmin/', xadmin.site.urls),  # 181007 django xadmin后台管理
     url(r'^$', RedirectView.as_view(url="/dashboard/")),  # 实现跳转的功能
     url(r'^dashboard/', include("dashboard.urls"), name="dashboard"),  # 控制面板
     url(r'^accounts/', include("accounts.urls"), name="accounts"),  # 权限管理
