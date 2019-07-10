@@ -13,14 +13,14 @@ Ada运维管理平台
   
       
 - 实现功能及计划
-![主页](http://ou529e3sj.bkt.clouddn.com/ada-plan.jpg)  
+![主页](static/img/ada-plan.jpg)  
   
     
 - 平台部分截图
-![主页](http://ou529e3sj.bkt.clouddn.com/ada-index.jpg)
-![主页](http://ou529e3sj.bkt.clouddn.com/ada-resources.pic.jpg)
-![主页](http://ou529e3sj.bkt.clouddn.com/ada-code_update.jpg)
-![主页](http://ou529e3sj.bkt.clouddn.com/ada-product.pic.jpg)
+![主页](static/img/ada-index.jpg)
+![主页](static/img/ada-resources.pic.jpg)
+![主页](static/img/ada-code_update.jpg)
+![主页](static/img/ada-product.pic.jpg)
   
       
 - 部署  
