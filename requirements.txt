@@ -40,7 +40,7 @@ ecdsa==0.13
 elasticsearch==6.1.1
 enum-compat==0.0.2
 ephem==3.7.6.0
-eventlet==0.22.1
+eventlet==0.31.0
 ForgeryPy==0.1
 greenlet==0.4.12
 gunicorn==19.7.1
