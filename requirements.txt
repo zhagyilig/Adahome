@@ -46,7 +46,7 @@ greenlet==0.4.12
 gunicorn==19.7.1
 idna==2.6
 influxdb==5.2.0
-ipython==6.5.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 itsdangerous==0.24
 itypes==1.1.0
