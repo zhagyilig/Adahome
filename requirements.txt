@@ -90,7 +90,7 @@ pyzmq==17.1.2
 redis==2.10.6
 requests==2.18.4
 s3transfer==0.1.13
-salt==2018.3.2
+salt==3002.7
 simplegeneric==0.8.1
 simplejson==3.13.2
 six==1.11.0
